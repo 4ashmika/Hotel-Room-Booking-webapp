@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Hotel Room Reservation MVP",
+  "description": "A minimal viable product for a hotel room reservation system. This application allows users to book a room by providing a guest name and room number, and to view a list of all current bookings.",
+  "requestFramePermissions": []
+}
