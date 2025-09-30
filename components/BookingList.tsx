@@ -60,6 +60,9 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Check-out Date
                   </th>
+                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                    Total Price
+                  </th>
                   <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Actions
                   </th>
@@ -72,6 +75,7 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{booking.roomNumber}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(booking.checkInDate)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(booking.checkOutDate)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300 font-medium">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300 text-center">
                       <button 
                         onClick={() => openConfirmationModal(booking)}

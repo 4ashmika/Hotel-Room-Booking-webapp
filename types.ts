@@ -4,10 +4,12 @@ export interface Booking {
   roomNumber: string;
   checkInDate: string;
   checkOutDate: string;
+  totalPrice: number;
 }
 
 export interface Room {
   id: string; // This will be the room number, e.g., '101'
   name: string;
   image: string;
+  pricePerNight: number;
 }

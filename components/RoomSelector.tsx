@@ -27,9 +27,10 @@ export const RoomSelector: React.FC<RoomSelectorProps> = ({ rooms, selectedRoomI
             <div className="absolute inset-0 bg-blue-500/30"></div>
           )}
 
-          <div className="absolute bottom-0 left-0 p-2">
+          <div className="absolute bottom-0 left-0 p-2 text-left">
             <h3 className="font-bold text-white text-sm">{room.name}</h3>
             <p className="text-xs text-slate-300">Room {room.id}</p>
+            <p className="text-xs text-slate-200 font-semibold">${room.pricePerNight} / night</p>
           </div>
           
           {selectedRoomId === room.id && (

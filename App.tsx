@@ -6,9 +6,9 @@ import { HotelIcon } from './components/icons/HotelIcon';
 
 function App() {
   const [bookings, setBookings] = useState<Booking[]>([
-    { id: '2024-01-01T12:00:00.000Z', guestName: 'Alice Johnson', roomNumber: '305', checkInDate: '2024-08-10', checkOutDate: '2024-08-15' },
-    { id: '2024-01-02T14:30:00.000Z', guestName: 'Bob Williams', roomNumber: '412', checkInDate: '2024-08-12', checkOutDate: '2024-08-18' },
-    { id: '2024-01-03T18:00:00.000Z', guestName: 'Charlie Brown', roomNumber: '305', checkInDate: '2024-08-20', checkOutDate: '2024-08-25' },
+    { id: '2024-01-01T12:00:00.000Z', guestName: 'Alice Johnson', roomNumber: '305', checkInDate: '2024-08-10', checkOutDate: '2024-08-15', totalPrice: 2250 },
+    { id: '2024-01-02T14:30:00.000Z', guestName: 'Bob Williams', roomNumber: '412', checkInDate: '2024-08-12', checkOutDate: '2024-08-18', totalPrice: 4500 },
+    { id: '2024-01-03T18:00:00.000Z', guestName: 'Charlie Brown', roomNumber: '305', checkInDate: '2024-08-20', checkOutDate: '2024-08-25', totalPrice: 2250 },
   ]);
 
   const addBooking = (newBooking: Omit<Booking, 'id'>): string | null => {
