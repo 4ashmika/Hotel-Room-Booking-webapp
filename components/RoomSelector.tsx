@@ -19,7 +19,7 @@ export const RoomSelector: React.FC<RoomSelectorProps> = ({ rooms, selectedRoomI
           className={`relative rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-1 ${selectedRoomId === room.id ? 'ring-2 ring-blue-500 scale-105' : 'ring-1 ring-slate-700 hover:ring-blue-500'}`}
           aria-pressed={selectedRoomId === room.id}
         >
-          <img src={room.image} alt={room.name} className="w-full h-24 object-cover" />
+          <img src={room.images[0]} alt={room.name} className="w-full h-24 object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
           
           {/* Add a blue tint overlay when selected */}

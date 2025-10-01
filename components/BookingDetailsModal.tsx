@@ -1,0 +1,100 @@
+import React from 'react';
+import type { Booking, Room } from '../types';
+import { XIcon } from './icons/XIcon';
+import { UserIcon } from './icons/UserIcon';
+import { PhoneIcon } from './icons/PhoneIcon';
+import { MailIcon } from './icons/MailIcon';
+import { IdIcon } from './icons/IdIcon';
+import { CalendarIcon } from './icons/CalendarIcon';
+
+interface BookingDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  booking: Booking | null;
+  room: Room | null;
+}
+
+export const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({ isOpen, onClose, booking, room }) => {
+  if (!isOpen || !booking || !room) {
+    return null;
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const offset = date.getTimezoneOffset();
+    const adjustedDate = new Date(date.getTime() + offset * 60000);
+    return adjustedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-lg m-4 transform transition-all" onClick={e => e.stopPropagation()}>
+        <div className="p-6">
+          <div className="flex justify-between items-start">
+            <div>
+                <h3 className="text-xl leading-6 font-bold text-white" id="modal-title">
+                    Booking Details
+                </h3>
+                <p className="text-sm text-slate-400 mt-1">For {room.name} - Room {room.id}</p>
+            </div>
+            <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-700" aria-label="Close modal">
+              <XIcon className="h-6 w-6 text-slate-400" />
+            </button>
+          </div>
+          
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <img src={room.images[0]} alt={room.name} className="w-full h-40 object-cover rounded-lg"/>
+            <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                    <CalendarIcon className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-xs text-slate-400">Check-in</p>
+                        <p className="font-bold text-white">{formatDate(booking.checkInDate)}</p>
+                    </div>
+                </div>
+                 <div className="flex items-center gap-3">
+                    <CalendarIcon className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-xs text-slate-400">Check-out</p>
+                        <p className="font-bold text-white">{formatDate(booking.checkOutDate)}</p>
+                    </div>
+                </div>
+                 <div className="border-t border-slate-700 pt-4">
+                    <p className="text-sm text-slate-400">Total Price</p>
+                    <p className="text-2xl font-bold text-white">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
+                 </div>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-slate-700 pt-6">
+             <h4 className="font-bold text-slate-200 mb-4">Guest Information</h4>
+             <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                    <UserIcon className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-300">{booking.guestName}</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                    <PhoneIcon className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-300">{booking.customerPhoneNumber}</span>
+                </div>
+                 <div className="flex items-center gap-3 text-sm">
+                    <MailIcon className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-300">{booking.customerEmail}</span>
+                </div>
+                 <div className="flex items-center gap-3 text-sm">
+                    <IdIcon className="h-5 w-5 text-slate-400" />
+                    <span className="text-slate-300">ID: {booking.customerId}</span>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,7 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import type { Booking, Room } from '../types';
 import { UserIcon } from './icons/UserIcon';
+import { PhoneIcon } from './icons/PhoneIcon';
+import { MailIcon } from './icons/MailIcon';
+import { IdIcon } from './icons/IdIcon';
 import { RoomSelector } from './RoomSelector';
+import { RoomDetails } from './RoomDetails';
 import { Calendar } from './Calendar';
 import { rooms } from '../data/rooms';
 import { ErrorBanner } from './ErrorBanner';
@@ -21,6 +25,9 @@ const formatDate = (date: Date | null) => {
 
 export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBookings }) => {
   const [guestName, setGuestName] = useState('');
+  const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [customerId, setCustomerId] = useState('');
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [checkInDate, setCheckInDate] = useState<Date | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
@@ -65,24 +72,48 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
   const resetForm = () => {
       setError('');
       setGuestName('');
+      setCustomerPhoneNumber('');
+      setCustomerEmail('');
+      setCustomerId('');
       setSelectedRoom(null);
       setCheckInDate(null);
       setCheckOutDate(null);
   }
 
+  const validateForm = () => {
+    if (!guestName.trim() || !customerPhoneNumber.trim() || !customerEmail.trim() || !customerId.trim()) {
+        setError('Please fill all guest detail fields.');
+        return false;
+    }
+    if (!/^\d{10}$/.test(customerPhoneNumber)) {
+        setError('Please enter a valid 10-digit phone number.');
+        return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        setError('Please enter a valid email address.');
+        return false;
+    }
+    if (!selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0) {
+      setError('Please select a room and a valid date range.');
+      return false;
+    }
+    return true;
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
-    if (!guestName.trim() || !selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0) {
-      setError('Please fill all fields, select a room, and a valid date range.');
-      return;
-    }
+    setError('');
+    
+    if (!validateForm()) return;
 
     const bookingError = onAddBooking({
       guestName,
-      roomNumber: selectedRoom.id,
-      checkInDate: formatDate(checkInDate),
-      checkOutDate: formatDate(checkOutDate),
+      customerPhoneNumber,
+      customerEmail,
+      customerId,
+      roomNumber: selectedRoom!.id,
+      checkInDate: formatDate(checkInDate!),
+      checkOutDate: formatDate(checkOutDate!),
       totalPrice,
     });
 
@@ -94,26 +125,47 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-2xl">
+    <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700 w-full">
       <h2 className="text-2xl font-bold text-white mb-6 text-center">Book a Room</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="guestName" className="block text-sm font-medium text-slate-300 mb-2">
-            1. Guest Name
+          <label className="block text-sm font-medium text-slate-300 mb-2">
+            1. Guest Details
           </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <UserIcon className="h-5 w-5 text-slate-400" />
+          <div className="space-y-4">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <UserIcon className="h-5 w-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                placeholder="Full Name (e.g., John Doe)"
+                className="w-full pl-10 pr-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                aria-label="Guest Name"
+              />
             </div>
-            <input
-              type="text"
-              id="guestName"
-              value={guestName}
-              onChange={(e) => setGuestName(e.target.value)}
-              placeholder="e.g., John Doe"
-              className="w-full pl-10 pr-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              aria-label="Guest Name"
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <PhoneIcon className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input type="tel" value={customerPhoneNumber} onChange={(e) => setCustomerPhoneNumber(e.target.value)} placeholder="10-digit Phone Number" className="w-full pl-10 pr-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" aria-label="Phone Number" />
+                </div>
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <MailIcon className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="Email Address" className="w-full pl-10 pr-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" aria-label="Email Address" />
+                </div>
+            </div>
+            <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <IdIcon className="h-5 w-5 text-slate-400" />
+                </div>
+                <input type="text" value={customerId} onChange={(e) => setCustomerId(e.target.value)} placeholder="National ID (NIC)" className="w-full pl-10 pr-4 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" aria-label="National ID"/>
+            </div>
           </div>
         </div>
         
@@ -126,12 +178,13 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
                 selectedRoomId={selectedRoom?.id ?? null} 
                 onSelectRoom={(id) => {
                     setSelectedRoom(rooms.find(r => r.id === id) || null);
-                    // Reset dates when room changes
                     setCheckInDate(null);
                     setCheckOutDate(null);
                 }}
             />
         </div>
+
+        {selectedRoom && <RoomDetails room={selectedRoom} />}
 
         <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">
