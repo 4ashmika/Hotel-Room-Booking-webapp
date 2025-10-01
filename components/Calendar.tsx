@@ -101,13 +101,15 @@ export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSel
       if (endDate && formatDate(dayDate) === formatDate(endDate)) isEnd = true;
 
       const baseClasses = "relative w-full h-0 pt-[100%] rounded-full flex items-center justify-center text-sm transition-colors duration-150";
-      const stateClasses = isDisabled
-        ? "text-slate-600 line-through cursor-not-allowed"
-        : "text-slate-200 hover:bg-slate-700 cursor-pointer";
+      const stateClasses = isPast
+        ? "text-slate-400 cursor-not-allowed"
+        : isUnavailable
+        ? "text-slate-400 line-through cursor-not-allowed"
+        : "text-slate-700 hover:bg-slate-200 cursor-pointer";
       
       let bgClasses = "";
-      if (isStart || isEnd) bgClasses = "bg-blue-600 text-white";
-      else if (inRange) bgClasses = "bg-blue-600/30 text-white";
+      if (isStart || isEnd) bgClasses = "bg-sky-500 text-white";
+      else if (inRange) bgClasses = "bg-sky-500/20 text-sky-800";
 
       days.push(
         <div key={i}
@@ -123,6 +125,9 @@ export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSel
                 aria-pressed={isStart || isEnd || inRange}
             >
              <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center">{i}</span>
+             {isUnavailable && !isPast && (
+                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 h-1 w-1 bg-red-400 rounded-full"></span>
+             )}
             </button>
         </div>
       );
@@ -133,17 +138,17 @@ export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSel
   return (
     <div className="w-full" onMouseLeave={() => setHoverDate(null)}>
       <div className="flex items-center justify-between mb-4">
-        <button type="button" onClick={() => changeMonth(-1)} className="p-2 rounded-full hover:bg-slate-700" aria-label="Previous month">
-          <ChevronLeftIcon className="h-5 w-5 text-slate-400" />
+        <button type="button" onClick={() => changeMonth(-1)} className="p-2 rounded-full hover:bg-slate-200" aria-label="Previous month">
+          <ChevronLeftIcon className="h-5 w-5 text-slate-500" />
         </button>
-        <h3 className="font-bold text-slate-200 text-center">
+        <h3 className="font-bold text-slate-800 text-center">
           {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </h3>
-        <button type="button" onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-slate-700" aria-label="Next month">
-          <ChevronRightIcon className="h-5 w-5 text-slate-400" />
+        <button type="button" onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-slate-200" aria-label="Next month">
+          <ChevronRightIcon className="h-5 w-5 text-slate-500" />
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-400 mb-2">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-500 mb-2">
         <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
       </div>
       <div className="grid grid-cols-7 gap-y-1 items-center">

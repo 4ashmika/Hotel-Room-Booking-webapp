@@ -130,8 +130,8 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
   const selectedRoom = selectedBooking ? rooms.find(r => r.id === selectedBooking.roomNumber) || null : null;
 
   const SortableHeader: React.FC<{ sortKey: SortableKey; children: React.ReactNode }> = ({ sortKey, children }) => (
-    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-        <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-white transition-colors">
+    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+        <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
             {children}
             <SortIcon className="h-4 w-4" direction={sortConfig.key === sortKey ? sortConfig.direction : undefined} />
         </button>
@@ -140,18 +140,18 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
 
   return (
     <>
-      <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-700 w-full">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Current Bookings</h2>
+      <div className="bg-sky-50/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-slate-200 w-full">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Current Bookings</h2>
 
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
-                <label htmlFor="room-filter" className="block text-sm font-medium text-slate-300 mb-1">Filter by Room</label>
+                <label htmlFor="room-filter" className="block text-sm font-medium text-slate-600 mb-1">Filter by Room</label>
                 <div className="relative">
                     <select 
                         id="room-filter" 
                         value={filterRoom}
                         onChange={(e) => setFilterRoom(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        className="w-full appearance-none pl-3 pr-10 py-3 bg-sky-100/50 text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
                     >
                         <option value="">All Rooms</option>
                         {rooms.map(room => (
@@ -164,13 +164,13 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
                 </div>
             </div>
             <div className="flex-1">
-                <label htmlFor="month-filter" className="block text-sm font-medium text-slate-300 mb-1">Filter by Month</label>
+                <label htmlFor="month-filter" className="block text-sm font-medium text-slate-600 mb-1">Filter by Month</label>
                 <div className="relative">
                     <select 
                         id="month-filter"
                         value={filterMonth}
                         onChange={(e) => setFilterMonth(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        className="w-full appearance-none pl-3 pr-10 py-3 bg-sky-100/50 text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
                     >
                         <option value="">All Months</option>
                         {availableMonths.map(month => (
@@ -184,37 +184,37 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
 
         <div className="overflow-x-auto">
             {filteredAndSortedBookings.length > 0 ? (
-                <table className="min-w-full divide-y divide-slate-700">
-                  <thead className="bg-slate-800">
+                <table className="min-w-full divide-y divide-slate-200">
+                  <thead className="bg-sky-100">
                     <tr>
                       <SortableHeader sortKey="guestName">Guest Name</SortableHeader>
                       <SortableHeader sortKey="roomNumber">Room Number</SortableHeader>
                       <SortableHeader sortKey="checkInDate">Check-in Date</SortableHeader>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                         Check-out Date
                       </th>
                       <SortableHeader sortKey="totalPrice">Total Price</SortableHeader>
-                      <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-300 uppercase tracking-wider">
+                      <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-slate-900/50 divide-y divide-slate-800">
-                    {filteredAndSortedBookings.map((booking, index) => (
+                  <tbody className="bg-transparent divide-y divide-slate-200">
+                    {filteredAndSortedBookings.map((booking) => (
                       <tr 
                         key={booking.id} 
                         onClick={() => openDetailsModal(booking)}
-                        className={`${index % 2 === 0 ? 'bg-slate-800/50' : 'bg-slate-700/30'} hover:bg-slate-700/50 transition-colors cursor-pointer`}
+                        className="hover:bg-sky-100/50 transition-colors cursor-pointer"
                       >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{booking.guestName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{booking.roomNumber}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(booking.checkInDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(booking.checkOutDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300 font-medium">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{booking.guestName}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{booking.roomNumber}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{formatDate(booking.checkInDate)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{formatDate(booking.checkOutDate)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 text-center">
                           <button 
                             onClick={(e) => openConfirmationModal(e, booking)}
-                            className="p-2 rounded-full text-slate-400 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-red-500 transition-colors"
+                            className="p-2 rounded-full text-slate-500 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-red-500 transition-colors"
                             aria-label={`Delete booking for ${booking.guestName}`}
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -225,7 +225,7 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
                   </tbody>
                 </table>
             ) : (
-                 <p className="text-slate-400 text-center py-8">
+                 <p className="text-slate-500 text-center py-8">
                     {bookings.length === 0 ? "No rooms are booked yet." : "No bookings match the current filters."}
                 </p>
             )}

@@ -5,9 +5,9 @@ export const rooms: Room[] = [
     id: '101', 
     name: 'Standard Single', 
     images: [
-        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1590490359854-dfba59585b73?q=80&w=800&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?q=80&w=800&auto=format&fit=crop',
+        'https://placehold.co/800x600/a3c9e8/ffffff?text=Cozy+Single+Bed',
+        'https://placehold.co/800x600/b3d9f8/ffffff?text=Modern+Bathroom',
+        'https://placehold.co/800x600/c3e9ff/ffffff?text=Work+Desk+View',
     ],
     pricePerNight: 150,
     description: 'A cozy and compact room perfect for solo travelers. Features a comfortable single bed, a work desk, and an en-suite bathroom with a shower.',
