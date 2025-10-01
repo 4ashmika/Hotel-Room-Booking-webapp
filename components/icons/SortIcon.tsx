@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface SortIconProps {
-  className?: string;
-  direction?: 'asc' | 'desc';
-}
-
-export const SortIcon: React.FC<SortIconProps> = ({ className, direction }) => (
+export const SortIcon = ({ className, direction }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

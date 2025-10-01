@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LockIcon } from './icons/LockIcon';
 
-interface PasswordModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (password: string) => void;
-}
-
-export const PasswordModal: React.FC<PasswordModalProps> = ({
+export const PasswordModal = ({
   isOpen,
   onClose,
   onConfirm,
 }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -28,7 +22,7 @@ export const PasswordModal: React.FC<PasswordModalProps> = ({
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!password.trim()) {
       setError('Password cannot be empty.');

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { Room } from '../types';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
 import { UsersIcon } from './icons/UsersIcon';
@@ -8,18 +7,14 @@ import { WifiIcon } from './icons/WifiIcon';
 import { TvIcon } from './icons/TvIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 
-interface RoomDetailsProps {
-  room: Room;
-}
-
-const AmenityIcon: React.FC<{ amenity: string }> = ({ amenity }) => {
+const AmenityIcon = ({ amenity }) => {
     const lowerAmenity = amenity.toLowerCase();
-    if (lowerAmenity.includes('wifi')) return <WifiIcon className="h-5 w-5 text-cyan-400" />;
-    if (lowerAmenity.includes('tv')) return <TvIcon className="h-5 w-5 text-cyan-400" />;
-    return <SparklesIcon className="h-5 w-5 text-cyan-400" />;
+    if (lowerAmenity.includes('wifi')) return <WifiIcon className="h-5 w-5 text-cyan-500" />;
+    if (lowerAmenity.includes('tv')) return <TvIcon className="h-5 w-5 text-cyan-500" />;
+    return <SparklesIcon className="h-5 w-5 text-cyan-500" />;
 };
 
-export const RoomDetails: React.FC<RoomDetailsProps> = ({ room }) => {
+export const RoomDetails = ({ room }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
@@ -51,11 +46,11 @@ export const RoomDetails: React.FC<RoomDetailsProps> = ({ room }) => {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
         <div className="flex items-center gap-2 p-3 bg-sky-200/60 rounded-lg">
-          <UsersIcon className="h-5 w-5 text-cyan-400 flex-shrink-0" />
+          <UsersIcon className="h-5 w-5 text-cyan-500 flex-shrink-0" />
           <span className="text-slate-700">Sleeps {room.capacity}</span>
         </div>
          <div className="flex items-center gap-2 p-3 bg-sky-200/60 rounded-lg">
-          <BedIcon className="h-5 w-5 text-cyan-400 flex-shrink-0" />
+          <BedIcon className="h-5 w-5 text-cyan-500 flex-shrink-0" />
           <span className="text-slate-700">{room.beds.map(b => `${b.count} ${b.type}`).join(', ')}</span>
         </div>
         {room.amenities.slice(0, 2).map(amenity => (

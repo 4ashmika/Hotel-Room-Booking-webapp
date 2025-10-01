@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import type { Booking } from '../types';
 import { TrashIcon } from './icons/TrashIcon';
 import { ConfirmationModal } from './ConfirmationModal';
 import { BookingDetailsModal } from './BookingDetailsModal';
@@ -7,26 +6,20 @@ import { rooms } from '../data/rooms';
 import { SortIcon } from './icons/SortIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 
-interface BookingListProps {
-  bookings: Booking[];
-  onDeleteBooking: (bookingId: string) => void;
-}
-
-type SortableKey = 'guestName' | 'roomNumber' | 'checkInDate' | 'totalPrice';
-
-export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBooking }) => {
+export const BookingList = ({ bookings, onDeleteBooking }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [bookingToDelete, setBookingToDelete] = useState<Booking | null>(null);
+  const [bookingToDelete, setBookingToDelete] = useState(null);
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   
-  const [sortConfig, setSortConfig] = useState<{ key: SortableKey; direction: 'asc' | 'desc' }>({ key: 'checkInDate', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: 'checkInDate', direction: 'asc' });
   
-  const [filterRoom, setFilterRoom] = useState<string>('');
-  const [filterMonth, setFilterMonth] = useState<string>('');
+  const [filterRoom, setFilterRoom] = useState('');
+  const [filterMonth, setFilterMonth] = useState('');
 
   const availableMonths = useMemo(() => {
+    // FIX: Explicitly type the Set to avoid its elements being inferred as 'unknown'.
     const monthSet = new Set<string>();
     bookings.forEach(booking => {
         const checkIn = new Date(booking.checkInDate);
@@ -84,15 +77,15 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
     return filteredItems;
   }, [bookings, sortConfig, filterRoom, filterMonth]);
 
-  const requestSort = (key: SortableKey) => {
-    let direction: 'asc' | 'desc' = 'asc';
+  const requestSort = (key) => {
+    let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
         direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
 
-  const openConfirmationModal = (e: React.MouseEvent, booking: Booking) => {
+  const openConfirmationModal = (e, booking) => {
     e.stopPropagation(); // Prevent row click from triggering
     setBookingToDelete(booking);
     setIsDeleteModalOpen(true);
@@ -110,7 +103,7 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
     }
   };
 
-  const openDetailsModal = (booking: Booking) => {
+  const openDetailsModal = (booking) => {
     setSelectedBooking(booking);
     setIsDetailsModalOpen(true);
   };
@@ -120,7 +113,7 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
     setIsDetailsModalOpen(false);
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     const offset = date.getTimezoneOffset();
     const adjustedDate = new Date(date.getTime() + (offset*60*1000));
@@ -129,7 +122,7 @@ export const BookingList: React.FC<BookingListProps> = ({ bookings, onDeleteBook
   
   const selectedRoom = selectedBooking ? rooms.find(r => r.id === selectedBooking.roomNumber) || null : null;
 
-  const SortableHeader: React.FC<{ sortKey: SortableKey; children: React.ReactNode }> = ({ sortKey, children }) => (
+  const SortableHeader = ({ sortKey, children }) => (
     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
         <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
             {children}

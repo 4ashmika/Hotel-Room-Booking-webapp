@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import type { Booking, Room } from '../types';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
 import { MailIcon } from './icons/MailIcon';
@@ -10,13 +9,9 @@ import { Calendar } from './Calendar';
 import { rooms } from '../data/rooms';
 import { ErrorBanner } from './ErrorBanner';
 import { BookingConfirmationModal } from './BookingConfirmationModal';
+import { SpinnerIcon } from './icons/SpinnerIcon';
 
-interface BookingFormProps {
-  onAddBooking: (booking: Omit<Booking, 'id'>) => { error: string | null; bookingId: string | null };
-  allBookings: Booking[];
-}
-
-const formatDate = (date: Date | null) => {
+const formatDate = (date) => {
   if (!date) return '';
   // Add time zone offset to prevent date from shifting
   const offset = date.getTimezoneOffset();
@@ -24,22 +19,23 @@ const formatDate = (date: Date | null) => {
   return adjustedDate.toISOString().split('T')[0];
 };
 
-export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBookings }) => {
+export const BookingForm = ({ onAddBooking, allBookings }) => {
   const [guestName, setGuestName] = useState('');
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerId, setCustomerId] = useState('');
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [checkInDate, setCheckInDate] = useState<Date | null>(null);
-  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
   const [error, setError] = useState('');
-  const [confirmedBooking, setConfirmedBooking] = useState<Omit<Booking, 'id'> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmedBooking, setConfirmedBooking] = useState(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
   const unavailableDates = useMemo(() => {
     if (!selectedRoom) return [];
 
-    const dates = new Set<string>();
+    const dates = new Set();
     allBookings
       .filter(booking => booking.roomNumber === selectedRoom.id)
       .forEach(booking => {
@@ -67,7 +63,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
     return { numberOfNights: 0, totalPrice: 0 };
   }, [selectedRoom, checkInDate, checkOutDate]);
 
-  const handleDateRangeSelect = (range: { start: Date | null, end: Date | null }) => {
+  const handleDateRangeSelect = (range) => {
     setCheckInDate(range.start);
     setCheckOutDate(range.end);
   };
@@ -103,30 +99,37 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
     return true;
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
     if (!validateForm()) return;
 
-    const newBookingData = {
-      guestName,
-      customerPhoneNumber,
-      customerEmail,
-      customerId,
-      roomNumber: selectedRoom!.id,
-      checkInDate: formatDate(checkInDate!),
-      checkOutDate: formatDate(checkOutDate!),
-      totalPrice,
-    };
-
-    const result = onAddBooking(newBookingData);
-
-    if (result.error) {
-      setError(result.error);
-    } else {
-      setConfirmedBooking(newBookingData);
-      setIsConfirmationModalOpen(true);
+    setIsLoading(true);
+    try {
+      const newBookingData = {
+        guestName,
+        customerPhoneNumber,
+        customerEmail,
+        customerId,
+        roomNumber: selectedRoom.id,
+        checkInDate: formatDate(checkInDate),
+        checkOutDate: formatDate(checkOutDate),
+        totalPrice,
+      };
+  
+      const result = await onAddBooking(newBookingData);
+  
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setConfirmedBooking(newBookingData);
+        setIsConfirmationModalOpen(true);
+      }
+    } catch (e) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -246,10 +249,17 @@ export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBooki
           {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
           <button
             type="submit"
-            className="w-full bg-sky-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-sky-500 transition-transform transform hover:scale-105 mt-4 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:scale-100"
-            disabled={!guestName || !selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0}
+            className="w-full inline-flex items-center justify-center bg-sky-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-sky-500 transition-transform transform hover:scale-105 mt-4 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:scale-100"
+            disabled={!guestName || !selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0 || isLoading}
           >
-            Book Now for {totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+            {isLoading ? (
+                <>
+                    <SpinnerIcon className="h-5 w-5 mr-3" />
+                    Processing...
+                </>
+            ) : (
+                `Book Now for ${totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`
+            )}
           </button>
         </form>
       </div>

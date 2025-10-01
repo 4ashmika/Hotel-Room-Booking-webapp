@@ -2,24 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
 
-interface CalendarProps {
-  unavailableDates: string[];
-  onRangeSelect: (range: { start: Date | null, end: Date | null }) => void;
-  initialStartDate: Date | null;
-  initialEndDate: Date | null;
-}
-
-const formatDate = (date: Date) => {
+const formatDate = (date) => {
     const offset = date.getTimezoneOffset();
     const adjustedDate = new Date(date.getTime() - (offset*60*1000));
     return adjustedDate.toISOString().split('T')[0];
 };
 
-export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSelect, initialStartDate, initialEndDate }) => {
+export const Calendar = ({ unavailableDates, onRangeSelect, initialStartDate, initialEndDate }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [startDate, setStartDate] = useState<Date | null>(initialStartDate);
-  const [endDate, setEndDate] = useState<Date | null>(initialEndDate);
-  const [hoverDate, setHoverDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState(initialStartDate);
+  const [endDate, setEndDate] = useState(initialEndDate);
+  const [hoverDate, setHoverDate] = useState(null);
 
   useEffect(() => {
     setStartDate(initialStartDate);
@@ -31,7 +24,7 @@ export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSel
   
   const unavailableDatesSet = new Set(unavailableDates);
 
-  const changeMonth = (amount: number) => {
+  const changeMonth = (amount) => {
     setCurrentMonth(prev => {
       const newDate = new Date(prev);
       newDate.setMonth(newDate.getMonth() + amount);
@@ -39,7 +32,7 @@ export const Calendar: React.FC<CalendarProps> = ({ unavailableDates, onRangeSel
     });
   };
 
-  const handleDateClick = (day: Date) => {
+  const handleDateClick = (day) => {
     if (day < today || unavailableDatesSet.has(formatDate(day))) return;
 
     if (!startDate || (startDate && endDate)) {

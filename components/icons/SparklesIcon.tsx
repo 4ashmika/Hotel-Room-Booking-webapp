@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const SparklesIcon: React.FC<{ className?: string }> = ({ className }) => (
+export const SparklesIcon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

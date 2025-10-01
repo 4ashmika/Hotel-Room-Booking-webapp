@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const WifiIcon: React.FC<{ className?: string }> = ({ className }) => (
+export const WifiIcon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={className}

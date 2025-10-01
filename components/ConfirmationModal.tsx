@@ -1,15 +1,7 @@
 import React from 'react';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
 
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title: string;
-  message: string;
-}
-
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+export const ConfirmationModal = ({
   isOpen,
   onClose,
   onConfirm,

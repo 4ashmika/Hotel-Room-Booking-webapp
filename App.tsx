@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { Booking } from './types';
 import { BookingForm } from './components/BookingForm';
 import { BookingList } from './components/BookingList';
 import { HotelIcon } from './components/icons/HotelIcon';
@@ -8,49 +7,68 @@ import { rooms } from './data/rooms';
 import { PasswordModal } from './components/PasswordModal';
 
 function App() {
-  const [bookings, setBookings] = useState<Booking[]>([
+  const [bookings, setBookings] = useState([
     { id: '1', guestName: 'Alice Johnson', customerPhoneNumber: '1112223333', customerEmail: 'alice@example.com', customerId: 'AB123456', roomNumber: '305', checkInDate: '2024-08-10', checkOutDate: '2024-08-15', totalPrice: 2250 },
     { id: '2', guestName: 'Bob Williams', customerPhoneNumber: '4445556666', customerEmail: 'bob@example.com', customerId: 'CD789012', roomNumber: '412', checkInDate: '2024-08-12', checkOutDate: '2024-08-18', totalPrice: 4500 },
     { id: '3', guestName: 'Charlie Brown', customerPhoneNumber: '7778889999', customerEmail: 'charlie@example.com', customerId: 'EF345678', roomNumber: '305', checkInDate: '2024-09-20', checkOutDate: '2024-09-25', totalPrice: 2250 },
   ]);
 
-  const [userRole, setUserRole] = useState<'guest' | 'admin'>('guest');
-  const [guestBookingId, setGuestBookingId] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState('guest');
+  const [guestBookingId, setGuestBookingId] = useState(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
-  const addBooking = (newBookingData: Omit<Booking, 'id'>): { error: string | null; bookingId: string | null } => {
-    const newBookingStart = new Date(newBookingData.checkInDate);
-    const newBookingEnd = new Date(newBookingData.checkOutDate);
+  const addBooking = (newBookingData) => {
+    return new Promise((resolve) => {
+      // Simulate network delay
+      setTimeout(() => {
+        const newBookingStart = new Date(newBookingData.checkInDate);
+        const newBookingEnd = new Date(newBookingData.checkOutDate);
 
-    const isOverlap = bookings.some(booking => {
-        if (booking.roomNumber !== newBookingData.roomNumber) {
+        const isOverlap = bookings.some(booking => {
+          if (booking.roomNumber !== newBookingData.roomNumber) {
             return false;
+          }
+          const existingStart = new Date(booking.checkInDate);
+          const existingEnd = new Date(booking.checkOutDate);
+          
+          return newBookingStart < existingEnd && newBookingEnd > existingStart;
+        });
+
+        if (isOverlap) {
+          resolve({ error: `Error: Room ${newBookingData.roomNumber} is already booked for the selected dates.`, bookingId: null });
+          return;
         }
-        const existingStart = new Date(booking.checkInDate);
-        const existingEnd = new Date(booking.checkOutDate);
         
-        return newBookingStart < existingEnd && newBookingEnd > existingStart;
+        const newBookingWithId = { ...newBookingData, id: new Date().toISOString() + Math.random() };
+        setBookings(prevBookings => [...prevBookings, newBookingWithId]);
+        
+        if (userRole === 'guest') {
+            setGuestBookingId(newBookingWithId.id);
+        }
+
+        resolve({ error: null, bookingId: newBookingWithId.id }); // Indicates success
+      }, 1500);
     });
-
-    if (isOverlap) {
-        return { error: `Error: Room ${newBookingData.roomNumber} is already booked for the selected dates.`, bookingId: null };
-    }
-    
-    const newBookingWithId = { ...newBookingData, id: new Date().toISOString() + Math.random() };
-    setBookings(prevBookings => [...prevBookings, newBookingWithId]);
-    
-    if (userRole === 'guest') {
-        setGuestBookingId(newBookingWithId.id);
-    }
-
-    return { error: null, bookingId: newBookingWithId.id }; // Indicates success
   };
   
-  const deleteBooking = (bookingId: string) => {
+  const deleteBooking = (bookingId) => {
     setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
   };
   
-  const handleLogin = (password: string) => {
+  const updateBookingDetails = (bookingId, updatedDetails) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            setBookings(prevBookings =>
+                prevBookings.map(booking =>
+                    booking.id === bookingId ? { ...booking, ...updatedDetails } : booking
+                )
+            );
+            resolve({ success: true });
+        }, 1000);
+    });
+  };
+
+  const handleLogin = (password) => {
     // For now, any non-empty password grants access
     if (password) {
       setUserRole('admin');
@@ -71,7 +89,7 @@ function App() {
             <HotelIcon className="h-12 w-12 text-sky-500" />
             <div>
               <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-cyan-600">
-                Hotel Reservation System
+                Sea View Hotel
               </h1>
               <p className="text-slate-500 mt-1 hidden sm:block">Sea view hotel Hikkaduwa.</p>
             </div>
@@ -114,6 +132,7 @@ function App() {
                     booking={guestBooking} 
                     room={guestRoom} 
                     onNewBooking={() => setGuestBookingId(null)} 
+                    onUpdateBooking={updateBookingDetails}
                 />
             )}
         </main>

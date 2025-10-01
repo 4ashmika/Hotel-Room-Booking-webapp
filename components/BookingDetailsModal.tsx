@@ -1,5 +1,4 @@
 import React from 'react';
-import type { Booking, Room } from '../types';
 import { XIcon } from './icons/XIcon';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
@@ -7,19 +6,12 @@ import { MailIcon } from './icons/MailIcon';
 import { IdIcon } from './icons/IdIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 
-interface BookingDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  booking: Booking | null;
-  room: Room | null;
-}
-
-export const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({ isOpen, onClose, booking, room }) => {
+export const BookingDetailsModal = ({ isOpen, onClose, booking, room }) => {
   if (!isOpen || !booking || !room) {
     return null;
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     const offset = date.getTimezoneOffset();
     const adjustedDate = new Date(date.getTime() + offset * 60000);

@@ -1,14 +1,7 @@
 import React from 'react';
-import type { Room } from '../types';
 import { CheckIcon } from './icons/CheckIcon';
 
-interface RoomSelectorProps {
-  rooms: Room[];
-  selectedRoomId: string | null;
-  onSelectRoom: (roomId: string) => void;
-}
-
-export const RoomSelector: React.FC<RoomSelectorProps> = ({ rooms, selectedRoomId, onSelectRoom }) => {
+export const RoomSelector = ({ rooms, selectedRoomId, onSelectRoom }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {rooms.map(room => {
@@ -20,7 +13,7 @@ export const RoomSelector: React.FC<RoomSelectorProps> = ({ rooms, selectedRoomI
             onClick={() => onSelectRoom(room.id)}
             className={`
               relative rounded-lg overflow-hidden group
-              focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-sky-100 focus:ring-sky-500 
+              focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-offset-sky-100 focus:ring-sky-500
               transition-all duration-300 transform hover:-translate-y-1
               ${isSelected 
                 ? 'ring-4 ring-sky-500 scale-105' 
