@@ -77,7 +77,7 @@ export const PasswordModal = ({
           <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex flex-col sm:flex-row-reverse gap-3">
             <button
               type="submit"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition-colors"
+              className="w-full inline-flex justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition-all"
             >
               Confirm
             </button>

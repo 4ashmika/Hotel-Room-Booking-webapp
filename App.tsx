@@ -12,8 +12,12 @@ import { HotelIcon } from './components/icons/HotelIcon';
 import { XIcon } from './components/icons/XIcon';
 import { LockIcon } from './components/icons/LockIcon';
 import { LogoutIcon } from './components/icons/LogoutIcon';
+import { FindBookingView } from './components/FindBookingView';
+import { GuestSidebar } from './components/GuestSidebar';
+import { WelcomeView } from './components/WelcomeView';
 
-type View = 'dashboard' | 'bookings' | 'new_booking' | 'rooms';
+type AdminView = 'dashboard' | 'bookings' | 'new_booking' | 'rooms';
+type GuestView = 'welcome' | 'new_booking' | 'find_booking';
 
 function App() {
   const [bookings, setBookings] = useState([
@@ -25,15 +29,17 @@ function App() {
   const [userRole, setUserRole] = useState('guest');
   const [guestBookingId, setGuestBookingId] = useState(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [activeView, setActiveView] = useState<View>('dashboard');
+  const [activeView, setActiveView] = useState<AdminView>('dashboard');
+  const [guestView, setGuestView] = useState<GuestView>('welcome');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   useEffect(() => {
     if (userRole === 'guest') {
-        setActiveView('new_booking');
+        setGuestView('welcome');
         setIsSidebarOpen(false);
     } else {
         setActiveView('dashboard');
+        setIsSidebarOpen(false);
     }
   }, [userRole]);
 
@@ -72,7 +78,13 @@ function App() {
   };
   
   const deleteBooking = (bookingId) => {
-    setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
+    return new Promise((resolve) => {
+        // Simulate network delay
+        setTimeout(() => {
+            setBookings(prevBookings => prevBookings.filter(booking => booking.id !== bookingId));
+            resolve({ success: true });
+        }, 1000);
+    });
   };
   
   const updateBookingDetails = (bookingId, updatedDetails) => {
@@ -87,6 +99,26 @@ function App() {
         }, 1000);
     });
   };
+  
+  const findBooking = (details) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const { guestName, customerPhoneNumber } = details;
+            // Trim and ignore case for name, trim phone number
+            const found = bookings.find(b =>
+                b.guestName.trim().toLowerCase() === guestName.trim().toLowerCase() &&
+                b.customerPhoneNumber.trim() === customerPhoneNumber.trim()
+            );
+
+            if (found) {
+                setGuestBookingId(found.id);
+                resolve({ success: true });
+            } else {
+                resolve({ error: 'No booking found with the provided details. Please check the name and phone number.' });
+            }
+        }, 1000); // Simulate network delay
+    });
+};
 
   const handleLogin = (password) => {
     if (password) {
@@ -128,22 +160,43 @@ function App() {
         <GuestBookingView 
             booking={guestBooking} 
             room={guestRoom} 
-            onNewBooking={() => setGuestBookingId(null)} 
+            onNewBooking={() => {
+                setGuestBookingId(null);
+                setGuestView('welcome');
+            }} 
             onUpdateBooking={updateBookingDetails}
         />
       );
     }
-    return <BookingForm onAddBooking={addBooking} allBookings={bookings} />;
+    
+    switch (guestView) {
+        case 'welcome':
+            return <WelcomeView 
+                onNewBookingClick={() => setGuestView('new_booking')} 
+                onFindBookingClick={() => setGuestView('find_booking')} 
+            />;
+        case 'find_booking':
+            return <FindBookingView onFindBooking={findBooking} />;
+        case 'new_booking':
+        default:
+            return <BookingForm onAddBooking={addBooking} allBookings={bookings} />;
+    }
   }
   
   return (
     <div className="flex h-screen bg-gray-50 font-sans">
       
-      {userRole === 'admin' && (
+      {userRole === 'admin' ? (
         <Sidebar
           activeView={activeView}
           setActiveView={setActiveView}
-          onSwitchRole={handleRoleSwitch}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+        />
+      ) : (
+        <GuestSidebar 
+          activeView={guestView}
+          setActiveView={setGuestView}
           isOpen={isSidebarOpen}
           setIsOpen={setIsSidebarOpen}
         />
@@ -152,11 +205,9 @@ function App() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex justify-between items-center bg-white p-4 border-b border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-3">
-                {userRole === 'admin' && (
-                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden text-gray-600 hover:text-gray-900">
-                        {isSidebarOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-                    </button>
-                )}
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden text-gray-600 hover:text-gray-900">
+                    {isSidebarOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+                </button>
                 <div className="flex items-center gap-3">
                     <HotelIcon className="h-8 w-8 text-blue-600" />
                     <h1 className="text-xl font-bold text-gray-800">

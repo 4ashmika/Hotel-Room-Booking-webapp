@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
+import { SpinnerIcon } from './icons/SpinnerIcon';
 
 export const ConfirmationModal = ({
   isOpen,
@@ -7,6 +8,7 @@ export const ConfirmationModal = ({
   onConfirm,
   title,
   message,
+  isLoading,
 }) => {
   if (!isOpen) {
     return null;
@@ -38,15 +40,24 @@ export const ConfirmationModal = ({
         <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex flex-col sm:flex-row-reverse gap-3">
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm transition-colors"
+            className="w-full inline-flex justify-center rounded-md border-b-4 border-red-800 hover:border-red-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm transition-all disabled:bg-red-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-red-400"
             onClick={onConfirm}
+            disabled={isLoading}
           >
-            Delete
+            {isLoading ? (
+              <>
+                <SpinnerIcon className="h-5 w-5 mr-2" />
+                Deleting...
+              </>
+            ) : (
+              'Delete'
+            )}
           </button>
           <button
             type="button"
-            className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors"
+            className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors disabled:opacity-70"
             onClick={onClose}
+            disabled={isLoading}
           >
             Cancel
           </button>

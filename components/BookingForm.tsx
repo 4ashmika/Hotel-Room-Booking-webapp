@@ -158,7 +158,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
   return (
     <>
       <div className="p-6 sm:p-8 lg:p-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Create a New Booking</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -267,7 +267,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
             {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
             <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:-translate-y-0.5 shadow-md hover:shadow-lg mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-md"
+                className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all mt-4 border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-gray-400"
                 disabled={!guestName || !selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0 || isLoading}
             >
                 {isLoading ? (

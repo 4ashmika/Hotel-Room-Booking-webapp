@@ -10,6 +10,7 @@ import { SearchIcon } from './icons/SearchIcon';
 export const BookingList = ({ bookings, onDeleteBooking }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -103,9 +104,11 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (bookingToDelete) {
-      onDeleteBooking(bookingToDelete.id);
+      setIsDeleting(true);
+      await onDeleteBooking(bookingToDelete.id);
+      setIsDeleting(false);
       closeConfirmationModal();
     }
   };
@@ -256,6 +259,7 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
             onConfirm={handleConfirmDelete}
             title="Confirm Deletion"
             message={`Are you sure you want to delete the booking for ${bookingToDelete.guestName} in Room ${bookingToDelete.roomNumber}? This action cannot be undone.`}
+            isLoading={isDeleting}
         />
       )}
       <BookingDetailsModal
