@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
@@ -41,10 +42,15 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
     allBookings
       .filter(booking => booking.roomNumber === selectedRoom.id)
       .forEach(booking => {
-        let currentDate = new Date(booking.checkInDate);
-        const endDate = new Date(booking.checkOutDate);
+        // Robustly parse date strings to avoid timezone issues.
+        const [startYear, startMonth, startDay] = booking.checkInDate.split('-').map(Number);
+        const [endYear, endMonth, endDay] = booking.checkOutDate.split('-').map(Number);
+        let currentDate = new Date(startYear, startMonth - 1, startDay);
+        const endDate = new Date(endYear, endMonth - 1, endDay);
+
         while (currentDate < endDate) {
-          dates.add(formatDate(new Date(currentDate)));
+          // formatDate expects a Date object, which currentDate is.
+          dates.add(formatDate(currentDate));
           currentDate.setDate(currentDate.getDate() + 1);
         }
       });
@@ -160,12 +166,12 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
       <div className="p-6 sm:p-8 lg:p-12">
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Create a New Booking</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-10">
             <div>
                 <label className="block text-sm font-medium text-gray-600 mb-2">
                 1. Guest Details
                 </label>
-                <div className="space-y-4">
+                <div className="space-y-8">
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <UserIcon className="h-5 w-5 text-gray-400" />
@@ -175,29 +181,29 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
                     placeholder="Full Name (e.g., John Doe)"
-                    className={`w-full pl-10 pr-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 transition-colors ${fieldErrors.guestName ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`}
+                    className={`w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 transition-colors focus:ring-0 ${fieldErrors.guestName ? 'border-red-500' : 'border-gray-200 focus:border-gray-500'}`}
                     aria-label="Guest Name"
                     />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-8">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <PhoneIcon className="h-5 w-5 text-gray-400" />
                         </div>
-                        <input type="tel" value={customerPhoneNumber} onChange={(e) => setCustomerPhoneNumber(e.target.value)} placeholder="10-digit Phone Number" className={`w-full pl-10 pr-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 transition-colors ${fieldErrors.customerPhoneNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`} aria-label="Phone Number" />
+                        <input type="tel" value={customerPhoneNumber} onChange={(e) => setCustomerPhoneNumber(e.target.value)} placeholder="10-digit Phone Number" className={`w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 transition-colors focus:ring-0 ${fieldErrors.customerPhoneNumber ? 'border-red-500' : 'border-gray-200 focus:border-gray-500'}`} aria-label="Phone Number" />
                     </div>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <MailIcon className="h-5 w-5 text-gray-400" />
                         </div>
-                        <input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="Email Address" className={`w-full pl-10 pr-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 transition-colors ${fieldErrors.customerEmail ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`} aria-label="Email Address" />
+                        <input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="Email Address" className={`w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 transition-colors focus:ring-0 ${fieldErrors.customerEmail ? 'border-red-500' : 'border-gray-200 focus:border-gray-500'}`} aria-label="Email Address" />
                     </div>
                 </div>
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <IdIcon className="h-5 w-5 text-gray-400" />
                     </div>
-                    <input type="text" value={customerId} onChange={(e) => setCustomerId(e.target.value)} placeholder="National ID (NIC)" className={`w-full pl-10 pr-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 transition-colors ${fieldErrors.customerId ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'}`} aria-label="National ID"/>
+                    <input type="text" value={customerId} onChange={(e) => setCustomerId(e.target.value)} placeholder="National ID (NIC)" className={`w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 transition-colors focus:ring-0 ${fieldErrors.customerId ? 'border-red-500' : 'border-gray-200 focus:border-gray-500'}`} aria-label="National ID"/>
                 </div>
                 </div>
             </div>
@@ -267,7 +273,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
             {error && <ErrorBanner message={error} onDismiss={() => setError('')} />}
             <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all mt-4 border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-gray-400"
+                className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all mt-4 border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-gray-400"
                 disabled={!guestName || !selectedRoom || !checkInDate || !checkOutDate || totalPrice <= 0 || isLoading}
             >
                 {isLoading ? (

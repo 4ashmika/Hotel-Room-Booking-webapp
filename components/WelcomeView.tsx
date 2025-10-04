@@ -1,8 +1,11 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { CalendarPlusIcon } from './icons/CalendarPlusIcon';
 import { SearchIcon } from './icons/SearchIcon';
 import { rooms } from '../data/rooms';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
+import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
+import { ChevronRightIcon } from './icons/ChevronRightIcon';
 
 type WelcomeViewProps = {
   onNewBookingClick: () => void;
@@ -34,6 +37,68 @@ const signatureAmenities = [
     }
 ];
 
+const FeaturedRoomCard = ({ room }: { room: typeof featuredRooms[0] }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setCurrentImageIndex((prev) => (prev + 1) % room.images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setCurrentImageIndex((prev) => (prev - 1 + room.images.length) % room.images.length);
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden group transition-transform transform hover:-translate-y-1">
+      <div className="relative">
+        <img src={room.images[currentImageIndex]} alt={room.name} className="w-full h-56 object-cover" />
+
+        {room.images.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage} 
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 focus:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+              aria-label="Previous image"
+            >
+              <ChevronLeftIcon className="h-6 w-6" />
+            </button>
+            <button 
+              onClick={nextImage} 
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 focus:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+              aria-label="Next image"
+            >
+              <ChevronRightIcon className="h-6 w-6" />
+            </button>
+            
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                {room.images.map((_, index) => (
+                    <div
+                        key={index}
+                        className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                            currentImageIndex === index ? 'bg-white scale-110' : 'bg-white/50'
+                        }`}
+                        aria-label={`Image ${index + 1}`}
+                    />
+                ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-800">{room.name}</h3>
+        <p className="text-sm text-gray-500 mt-1">Room {room.id}</p>
+        <p className="text-lg font-bold text-gray-900 mt-4">
+          ${room.pricePerNight}<span className="text-sm font-medium text-gray-500">/night</span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export const WelcomeView: React.FC<WelcomeViewProps> = ({ onNewBookingClick, onFindBookingClick }) => {
   return (
     <div className="space-y-12 p-4 sm:p-6 lg:p-8">
@@ -48,7 +113,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onNewBookingClick, onF
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
                 onClick={onNewBookingClick}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2"
             >
                 <CalendarPlusIcon className="h-5 w-5" />
                 Book a New Stay
@@ -68,16 +133,7 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onNewBookingClick, onF
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Our Featured Rooms</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {featuredRooms.map(room => (
-            <div key={room.id} className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden group transition-transform transform hover:-translate-y-1">
-              <img src={room.images[0]} alt={room.name} className="w-full h-56 object-cover" />
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800">{room.name}</h3>
-                <p className="text-sm text-gray-500 mt-1">Room {room.id}</p>
-                <p className="text-lg font-bold text-gray-900 mt-4">
-                  ${room.pricePerNight}<span className="text-sm font-medium text-gray-500">/night</span>
-                </p>
-              </div>
-            </div>
+            <FeaturedRoomCard key={room.id} room={room} />
           ))}
         </div>
       </section>

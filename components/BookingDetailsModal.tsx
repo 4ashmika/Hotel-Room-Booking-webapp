@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { XIcon } from './icons/XIcon';
 import { UserIcon } from './icons/UserIcon';
@@ -6,17 +7,20 @@ import { MailIcon } from './icons/MailIcon';
 import { IdIcon } from './icons/IdIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  // The date string is in YYYY-MM-DD format. To avoid timezone issues where `new Date('YYYY-MM-DD')`
+  // is treated as UTC midnight (and can be the previous day in some timezones), we append the time
+  // and specify it's a UTC date.
+  const date = new Date(`${dateString}T00:00:00Z`);
+  // Then we format it back to YYYY-MM-DD, again specifying UTC to prevent local timezone from shifting it.
+  return date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
+};
+
 export const BookingDetailsModal = ({ isOpen, onClose, booking, room }) => {
   if (!isOpen || !booking || !room) {
     return null;
   }
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const offset = date.getTimezoneOffset();
-    const adjustedDate = new Date(date.getTime() + offset * 60000);
-    return adjustedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
 
   return (
     <div

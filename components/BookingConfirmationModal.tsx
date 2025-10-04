@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CheckIcon } from './icons/CheckIcon';
 import { rooms } from '../data/rooms';
@@ -46,7 +47,7 @@ export const BookingConfirmationModal = ({ isOpen, onClose, booking }) => {
         <div className="bg-gray-50 px-6 py-4 rounded-b-2xl text-center">
           <button
             type="button"
-            className="w-full sm:w-auto inline-flex justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-8 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+            className="w-full sm:w-auto inline-flex justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-8 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all"
             onClick={onClose}
           >
             Done

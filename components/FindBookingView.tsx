@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
@@ -33,7 +34,7 @@ export const FindBookingView = ({ onFindBooking }) => {
             <div className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
                 <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">Find Your Booking</h2>
                 <p className="text-gray-500 text-center mb-8">Enter your details to retrieve your reservation.</p>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <UserIcon className="h-5 w-5 text-gray-400" />
@@ -43,7 +44,7 @@ export const FindBookingView = ({ onFindBooking }) => {
                             value={guestName}
                             onChange={(e) => setGuestName(e.target.value)}
                             placeholder="Full Name used for booking"
-                            className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            className="w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
                             aria-label="Guest Name"
                         />
                     </div>
@@ -56,7 +57,7 @@ export const FindBookingView = ({ onFindBooking }) => {
                             value={customerPhoneNumber}
                             onChange={(e) => setCustomerPhoneNumber(e.target.value)}
                             placeholder="10-digit Phone Number"
-                            className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            className="w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
                             aria-label="Phone Number"
                         />
                     </div>
@@ -65,7 +66,7 @@ export const FindBookingView = ({ onFindBooking }) => {
                     
                     <button
                         type="submit"
-                        className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all mt-4 border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        className="w-full inline-flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all mt-4 border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled={isLoading}
                     >
                         {isLoading ? (

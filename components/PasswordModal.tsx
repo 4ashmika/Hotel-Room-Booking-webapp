@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { LockIcon } from './icons/LockIcon';
 
@@ -56,7 +57,7 @@ export const PasswordModal = ({
                 Please enter the password to access the admin panel.
               </p>
             </div>
-            <div className="mt-6">
+            <div className="mt-6 relative">
               <label htmlFor="password-input" className="sr-only">Password</label>
               <input
                 ref={inputRef}
@@ -68,7 +69,7 @@ export const PasswordModal = ({
                   if (error) setError('');
                 }}
                 placeholder="Enter password..."
-                className={`w-full px-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 focus:border-blue-500 transition-colors ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                className={`w-full px-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 transition-colors focus:ring-0 ${error ? 'border-red-500' : 'border-gray-200 focus:border-gray-500'}`}
                 aria-label="Admin Password"
               />
               {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
@@ -77,7 +78,7 @@ export const PasswordModal = ({
           <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex flex-col sm:flex-row-reverse gap-3">
             <button
               type="submit"
-              className="w-full inline-flex justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition-all"
+              className="w-full inline-flex justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:w-auto sm:text-sm transition-all"
             >
               Confirm
             </button>

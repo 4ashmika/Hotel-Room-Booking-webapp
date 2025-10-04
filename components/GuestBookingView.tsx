@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
@@ -98,7 +99,7 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
             value={value}
             onChange={handleDetailChange}
             placeholder={placeholder}
-            className="w-full pl-10 pr-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
         />
     </div>
   );
@@ -170,7 +171,7 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
                 </div>
                  {isEditing && (
                     <div className="flex items-center gap-4 mt-6">
-                        <button onClick={handleSaveChanges} disabled={isLoading} className="w-full inline-flex items-center justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-gray-400">
+                        <button onClick={handleSaveChanges} disabled={isLoading} className="w-full inline-flex items-center justify-center rounded-md border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed disabled:translate-y-0 disabled:border-b-4 disabled:hover:border-gray-400">
                             {isLoading ? <SpinnerIcon className="h-5 w-5" /> : 'Save Changes'}
                         </button>
                         <button onClick={handleCancel} className="w-full inline-flex justify-center rounded-md border border-gray-300 border-b-4 border-gray-400 active:translate-y-0.5 active:border-b-2 px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all">
@@ -195,7 +196,7 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
           <div className="pt-6 border-t border-gray-200 text-center">
               <button 
                   onClick={onNewBooking}
-                  className="w-full sm:w-auto inline-flex justify-center rounded-lg border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-8 py-3 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+                  className="w-full sm:w-auto inline-flex justify-center rounded-lg border-b-4 border-blue-800 hover:border-blue-700 active:translate-y-0.5 active:border-b-2 px-8 py-3 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all"
               >
                   Make Another Booking
               </button>

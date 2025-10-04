@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { TrashIcon } from './icons/TrashIcon';
 import { ConfirmationModal } from './ConfirmationModal';
@@ -6,6 +7,16 @@ import { rooms } from '../data/rooms';
 import { SortIcon } from './icons/SortIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { SearchIcon } from './icons/SearchIcon';
+
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  // The date string is in YYYY-MM-DD format. To avoid timezone issues where `new Date('YYYY-MM-DD')`
+  // is treated as UTC midnight (and can be the previous day in some timezones), we append the time
+  // and specify it's a UTC date.
+  const date = new Date(`${dateString}T00:00:00Z`);
+  // Then we format it back to YYYY-MM-DD, again specifying UTC to prevent local timezone from shifting it.
+  return date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
+};
 
 export const BookingList = ({ bookings, onDeleteBooking }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -122,13 +133,6 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
     setSelectedBooking(null);
     setIsDetailsModalOpen(false);
   };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const offset = date.getTimezoneOffset();
-    const adjustedDate = new Date(date.getTime() + (offset*60*1000));
-    return adjustedDate.toLocaleDateString('en-CA');
-  };
   
   const selectedRoom = selectedBooking ? rooms.find(r => r.id === selectedBooking.roomNumber) || null : null;
 
@@ -149,10 +153,11 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
       <div className="p-4 sm:p-6 lg:p-8 w-full">
         <h2 className="text-3xl font-bold text-gray-800 mb-8">Current Bookings</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div>
-                <label htmlFor="search-guest" className="block text-sm font-medium text-gray-600 mb-1">Search by Guest</label>
+        <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100 mb-8">
+            <h3 className="text-lg font-bold text-gray-700 mb-4">Filter & Search</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
                 <div className="relative">
+                    <label htmlFor="search-guest" className="absolute -top-3 left-2 bg-white px-1 text-xs text-gray-500">Search by Guest</label>
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <SearchIcon className="h-5 w-5 text-gray-400" />
                     </div>
@@ -162,18 +167,16 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Enter guest name..."
-                        className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        className="w-full pl-10 pr-4 py-2 bg-transparent text-gray-900 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
                     />
                 </div>
-            </div>
-            <div>
-                <label htmlFor="room-filter" className="block text-sm font-medium text-gray-600 mb-1">Filter by Room</label>
                 <div className="relative">
+                    <label htmlFor="room-filter" className="absolute -top-3 left-2 bg-white px-1 text-xs text-gray-500">Filter by Room</label>
                     <select 
                         id="room-filter" 
                         value={filterRoom}
                         onChange={(e) => setFilterRoom(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        className="w-full appearance-none bg-transparent text-gray-900 pl-3 pr-10 py-2 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
                     >
                         <option value="">All Rooms</option>
                         {rooms.map(room => (
@@ -184,15 +187,13 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
                     </select>
                     <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                 </div>
-            </div>
-            <div>
-                <label htmlFor="month-filter" className="block text-sm font-medium text-gray-600 mb-1">Filter by Month</label>
                 <div className="relative">
+                     <label htmlFor="month-filter" className="absolute -top-3 left-2 bg-white px-1 text-xs text-gray-500">Filter by Month</label>
                     <select 
                         id="month-filter"
                         value={filterMonth}
                         onChange={(e) => setFilterMonth(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                        className="w-full appearance-none bg-transparent text-gray-900 pl-3 pr-10 py-2 border-0 border-b-2 border-gray-200 focus:ring-0 focus:border-gray-500 transition-colors"
                     >
                         <option value="">All Months</option>
                         {availableMonths.map(month => (
