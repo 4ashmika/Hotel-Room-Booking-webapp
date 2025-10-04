@@ -9,9 +9,9 @@ import { SparklesIcon } from './icons/SparklesIcon';
 
 const AmenityIcon = ({ amenity }) => {
     const lowerAmenity = amenity.toLowerCase();
-    if (lowerAmenity.includes('wifi')) return <WifiIcon className="h-5 w-5 text-cyan-500" />;
-    if (lowerAmenity.includes('tv')) return <TvIcon className="h-5 w-5 text-cyan-500" />;
-    return <SparklesIcon className="h-5 w-5 text-cyan-500" />;
+    if (lowerAmenity.includes('wifi')) return <WifiIcon className="h-5 w-5 text-blue-500" />;
+    if (lowerAmenity.includes('tv')) return <TvIcon className="h-5 w-5 text-blue-500" />;
+    return <SparklesIcon className="h-5 w-5 text-blue-500" />;
 };
 
 export const RoomDetails = ({ room }) => {
@@ -26,7 +26,7 @@ export const RoomDetails = ({ room }) => {
   };
 
   return (
-    <div className="my-6 p-4 border border-slate-200 rounded-lg bg-sky-100/70 space-y-4">
+    <div className="my-6 p-4 border border-gray-200 rounded-lg bg-gray-100/60 space-y-4">
       <div className="relative">
         <img src={room.images[currentImageIndex]} alt={room.name} className="w-full h-48 object-cover rounded-lg" />
         {room.images.length > 1 && (
@@ -41,22 +41,22 @@ export const RoomDetails = ({ room }) => {
         )}
       </div>
       <div>
-        <h3 className="text-lg font-bold text-slate-900">{room.name}</h3>
-        <p className="text-sm text-slate-600 mt-1">{room.description}</p>
+        <h3 className="text-lg font-bold text-gray-900">{room.name}</h3>
+        <p className="text-sm text-gray-600 mt-1">{room.description}</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-        <div className="flex items-center gap-2 p-3 bg-sky-200/60 rounded-lg">
-          <UsersIcon className="h-5 w-5 text-cyan-500 flex-shrink-0" />
-          <span className="text-slate-700">Sleeps {room.capacity}</span>
+        <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-200">
+          <UsersIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
+          <span className="text-gray-700">Sleeps {room.capacity}</span>
         </div>
-         <div className="flex items-center gap-2 p-3 bg-sky-200/60 rounded-lg">
-          <BedIcon className="h-5 w-5 text-cyan-500 flex-shrink-0" />
-          <span className="text-slate-700">{room.beds.map(b => `${b.count} ${b.type}`).join(', ')}</span>
+         <div className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-200">
+          <BedIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
+          <span className="text-gray-700">{room.beds.map(b => `${b.count} ${b.type}`).join(', ')}</span>
         </div>
         {room.amenities.slice(0, 2).map(amenity => (
-            <div key={amenity} className="flex items-center gap-2 p-3 bg-sky-200/60 rounded-lg">
+            <div key={amenity} className="flex items-center gap-2 p-3 bg-white rounded-lg border border-gray-200">
                 <AmenityIcon amenity={amenity} />
-                <span className="text-slate-700">{amenity}</span>
+                <span className="text-gray-700">{amenity}</span>
             </div>
         ))}
       </div>

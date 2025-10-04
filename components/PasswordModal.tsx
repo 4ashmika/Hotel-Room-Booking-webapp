@@ -40,19 +40,19 @@ export const PasswordModal = ({
       onClick={onClose}
     >
       <div 
-        className="bg-sky-50 rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm m-4 transform transition-all"
+        className="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-sm m-4 transform transition-all"
         onClick={e => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
           <div className="p-8">
             <div className="text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-sky-500/20 mb-4">
-                <LockIcon className="h-6 w-6 text-sky-500" />
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+                <LockIcon className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-lg leading-6 font-bold text-slate-900" id="modal-title">
+              <h3 className="text-lg leading-6 font-bold text-gray-900" id="modal-title">
                 Admin Access
               </h3>
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-gray-500">
                 Please enter the password to access the admin panel.
               </p>
             </div>
@@ -68,22 +68,22 @@ export const PasswordModal = ({
                   if (error) setError('');
                 }}
                 placeholder="Enter password..."
-                className={`w-full px-4 py-3 bg-sky-100/50 text-slate-900 border rounded-lg focus:ring-2 focus:border-sky-500 transition-colors ${error ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-sky-500'}`}
+                className={`w-full px-4 py-3 bg-white text-gray-800 border rounded-lg focus:ring-2 focus:border-blue-500 transition-colors ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
                 aria-label="Admin Password"
               />
               {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
             </div>
           </div>
-          <div className="bg-sky-100/50 px-6 py-4 rounded-b-2xl flex flex-col sm:flex-row-reverse gap-3">
+          <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex flex-col sm:flex-row-reverse gap-3">
             <button
               type="submit"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-sky-500 sm:w-auto sm:text-sm transition-colors"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm transition-colors"
             >
               Confirm
             </button>
             <button
               type="button"
-              className="w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-slate-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors"
+              className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors"
               onClick={onClose}
             >
               Cancel

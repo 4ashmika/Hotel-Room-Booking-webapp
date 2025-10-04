@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookingForm } from './components/BookingForm';
 import { BookingList } from './components/BookingList';
-import { HotelIcon } from './components/icons/HotelIcon';
 import { GuestBookingView } from './components/GuestBookingView';
 import { rooms } from './data/rooms';
 import { PasswordModal } from './components/PasswordModal';
+import { Sidebar } from './components/Sidebar';
+import { Dashboard } from './components/Dashboard';
+import { RoomsView } from './components/RoomsView';
+import { MenuIcon } from './components/icons/MenuIcon';
+import { HotelIcon } from './components/icons/HotelIcon';
+import { XIcon } from './components/icons/XIcon';
+import { LockIcon } from './components/icons/LockIcon';
+import { LogoutIcon } from './components/icons/LogoutIcon';
+
+type View = 'dashboard' | 'bookings' | 'new_booking' | 'rooms';
 
 function App() {
   const [bookings, setBookings] = useState([
@@ -16,6 +25,17 @@ function App() {
   const [userRole, setUserRole] = useState('guest');
   const [guestBookingId, setGuestBookingId] = useState(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [activeView, setActiveView] = useState<View>('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  useEffect(() => {
+    if (userRole === 'guest') {
+        setActiveView('new_booking');
+        setIsSidebarOpen(false);
+    } else {
+        setActiveView('dashboard');
+    }
+  }, [userRole]);
 
   const addBooking = (newBookingData) => {
     return new Promise((resolve) => {
@@ -69,78 +89,93 @@ function App() {
   };
 
   const handleLogin = (password) => {
-    // For now, any non-empty password grants access
     if (password) {
       setUserRole('admin');
       setIsPasswordModalOpen(false);
     }
   };
+  
+  const handleRoleSwitch = () => {
+    if (userRole === 'guest') {
+        setIsPasswordModalOpen(true);
+    } else {
+        setUserRole('guest');
+        setGuestBookingId(null);
+    }
+  }
 
   const guestBooking = guestBookingId ? bookings.find(b => b.id === guestBookingId) : undefined;
   const guestRoom = guestBooking ? rooms.find(r => r.id === guestBooking.roomNumber) : undefined;
+  
+  const renderAdminView = () => {
+      switch(activeView) {
+          case 'dashboard':
+              return <Dashboard bookings={bookings} rooms={rooms} />;
+          case 'bookings':
+              return <BookingList bookings={bookings} onDeleteBooking={deleteBooking} />;
+          case 'new_booking':
+              return <BookingForm onAddBooking={addBooking} allBookings={bookings} />;
+          case 'rooms':
+              return <RoomsView />;
+          default:
+              return <Dashboard bookings={bookings} rooms={rooms} />;
+      }
+  }
 
+  const renderGuestView = () => {
+    if (guestBooking && guestRoom) {
+      return (
+        <GuestBookingView 
+            booking={guestBooking} 
+            room={guestRoom} 
+            onNewBooking={() => setGuestBookingId(null)} 
+            onUpdateBooking={updateBookingDetails}
+        />
+      );
+    }
+    return <BookingForm onAddBooking={addBooking} allBookings={bookings} />;
+  }
+  
   return (
-    <div className="min-h-screen text-slate-900 flex flex-col items-center p-4 sm:p-8 font-sans">
-      <div className="fixed top-0 left-0 w-full h-full bg-gradient-to-br from-sky-100/40 to-sky-200/60 -z-10" />
+    <div className="flex h-screen bg-gray-50 font-sans">
+      
+      {userRole === 'admin' && (
+        <Sidebar
+          activeView={activeView}
+          setActiveView={setActiveView}
+          onSwitchRole={handleRoleSwitch}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+        />
+      )}
 
-      <div className="relative z-10 w-full max-w-7xl flex flex-col items-center">
-        <header className="w-full flex justify-between items-center gap-4 mb-10">
-          <div className="flex items-center gap-4 text-left">
-            <HotelIcon className="h-12 w-12 text-sky-500" />
-            <div>
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-cyan-600">
-                Sea View Hotel
-              </h1>
-              <p className="text-slate-500 mt-1 hidden sm:block">Sea view hotel Hikkaduwa.</p>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <header className="flex justify-between items-center bg-white p-4 border-b border-gray-200 shadow-sm z-10">
+            <div className="flex items-center gap-3">
+                {userRole === 'admin' && (
+                    <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden text-gray-600 hover:text-gray-900">
+                        {isSidebarOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+                    </button>
+                )}
+                <div className="flex items-center gap-3">
+                    <HotelIcon className="h-8 w-8 text-blue-600" />
+                    <h1 className="text-xl font-bold text-gray-800">
+                      {userRole === 'admin' ? 'Admin Panel' : 'Hotel Booking'}
+                    </h1>
+                </div>
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-             <button
-                onClick={() => {
-                    if (userRole === 'guest') {
-                        setIsPasswordModalOpen(true);
-                    } else {
-                        setUserRole('guest');
-                        setGuestBookingId(null); // Reset guest view on mode switch
-                    }
-                }}
-                className="px-4 py-2 rounded-lg bg-slate-200 text-slate-600 font-semibold hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors text-sm"
-              >
-                {userRole === 'guest' ? 'Admin Panel' : 'Switch to Guest View'}
-              </button>
-          </div>
+            
+            <button onClick={handleRoleSwitch} className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition-colors">
+              {userRole === 'admin' ? <LogoutIcon className="h-5 w-5" /> : <LockIcon className="h-5 w-5" />}
+              <span>{userRole === 'admin' ? 'Guest View' : 'Admin Login'}</span>
+            </button>
         </header>
-
-        <main className="w-full mx-auto flex flex-col items-center gap-12">
-            {userRole === 'admin' && (
-              <>
-                <div className="w-full">
-                    <BookingForm onAddBooking={addBooking} allBookings={bookings} />
-                </div>
-                <div className="w-full">
-                    <BookingList bookings={bookings} onDeleteBooking={deleteBooking} />
-                </div>
-              </>
-            )}
-            {userRole === 'guest' && !guestBooking && (
-                <div className="w-full">
-                    <BookingForm onAddBooking={addBooking} allBookings={bookings} />
-                </div>
-            )}
-             {userRole === 'guest' && guestBooking && guestRoom && (
-                <GuestBookingView 
-                    booking={guestBooking} 
-                    room={guestRoom} 
-                    onNewBooking={() => setGuestBookingId(null)} 
-                    onUpdateBooking={updateBookingDetails}
-                />
-            )}
-        </main>
         
-        <footer className="mt-12 text-center text-slate-500 text-sm">
-          <p>@2025 All rights reserved .</p>
-        </footer>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto">
+            {userRole === 'admin' ? renderAdminView() : renderGuestView()}
+        </main>
       </div>
+
       <PasswordModal 
         isOpen={isPasswordModalOpen}
         onClose={() => setIsPasswordModalOpen(false)}

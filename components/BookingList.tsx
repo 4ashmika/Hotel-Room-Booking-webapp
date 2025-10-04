@@ -5,6 +5,7 @@ import { BookingDetailsModal } from './BookingDetailsModal';
 import { rooms } from '../data/rooms';
 import { SortIcon } from './icons/SortIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
+import { SearchIcon } from './icons/SearchIcon';
 
 export const BookingList = ({ bookings, onDeleteBooking }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -15,6 +16,7 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
   
   const [sortConfig, setSortConfig] = useState({ key: 'checkInDate', direction: 'asc' });
   
+  const [searchQuery, setSearchQuery] = useState('');
   const [filterRoom, setFilterRoom] = useState('');
   const [filterMonth, setFilterMonth] = useState('');
 
@@ -51,6 +53,11 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
   const filteredAndSortedBookings = useMemo(() => {
     let filteredItems = [...bookings];
     
+    if (searchQuery) {
+        filteredItems = filteredItems.filter(b => 
+            b.guestName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }
     if (filterRoom) {
         filteredItems = filteredItems.filter(b => b.roomNumber === filterRoom);
     }
@@ -75,7 +82,7 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
         });
     }
     return filteredItems;
-  }, [bookings, sortConfig, filterRoom, filterMonth]);
+  }, [bookings, sortConfig, filterRoom, filterMonth, searchQuery]);
 
   const requestSort = (key) => {
     let direction = 'asc';
@@ -122,9 +129,12 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
   
   const selectedRoom = selectedBooking ? rooms.find(r => r.id === selectedBooking.roomNumber) || null : null;
 
-  const SortableHeader = ({ sortKey, children }) => (
-    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-        <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-slate-900 transition-colors">
+  // FIX: Defined a props type for SortableHeader to resolve an incorrect "children is missing" error.
+  type SortableHeaderProps = { sortKey: string; children: React.ReactNode; };
+  // FIX: Explicitly typing the SortableHeader as a React.FC to correctly handle children props and resolve TypeScript errors.
+  const SortableHeader: React.FC<SortableHeaderProps> = ({ sortKey, children }) => (
+    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-gray-900 transition-colors">
             {children}
             <SortIcon className="h-4 w-4" direction={sortConfig.key === sortKey ? sortConfig.direction : undefined} />
         </button>
@@ -133,18 +143,34 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
 
   return (
     <>
-      <div className="bg-sky-50/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-slate-200 w-full">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Current Bookings</h2>
+      <div className="p-4 sm:p-6 lg:p-8 w-full">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">Current Bookings</h2>
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1">
-                <label htmlFor="room-filter" className="block text-sm font-medium text-slate-600 mb-1">Filter by Room</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div>
+                <label htmlFor="search-guest" className="block text-sm font-medium text-gray-600 mb-1">Search by Guest</label>
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <SearchIcon className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input 
+                        type="text"
+                        id="search-guest"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Enter guest name..."
+                        className="w-full pl-10 pr-4 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                    />
+                </div>
+            </div>
+            <div>
+                <label htmlFor="room-filter" className="block text-sm font-medium text-gray-600 mb-1">Filter by Room</label>
                 <div className="relative">
                     <select 
                         id="room-filter" 
                         value={filterRoom}
                         onChange={(e) => setFilterRoom(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-sky-100/50 text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                        className="w-full appearance-none pl-3 pr-10 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     >
                         <option value="">All Rooms</option>
                         {rooms.map(room => (
@@ -153,61 +179,59 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
                             </option>
                         ))}
                     </select>
-                    <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none" />
+                    <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                 </div>
             </div>
-            <div className="flex-1">
-                <label htmlFor="month-filter" className="block text-sm font-medium text-slate-600 mb-1">Filter by Month</label>
+            <div>
+                <label htmlFor="month-filter" className="block text-sm font-medium text-gray-600 mb-1">Filter by Month</label>
                 <div className="relative">
                     <select 
                         id="month-filter"
                         value={filterMonth}
                         onChange={(e) => setFilterMonth(e.target.value)}
-                        className="w-full appearance-none pl-3 pr-10 py-3 bg-sky-100/50 text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                        className="w-full appearance-none pl-3 pr-10 py-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     >
                         <option value="">All Months</option>
                         {availableMonths.map(month => (
                             <option key={month.value} value={month.value}>{month.label}</option>
                         ))}
                     </select>
-                     <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none" />
+                     <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                 </div>
             </div>
         </div>
 
         <div className="overflow-x-auto">
             {filteredAndSortedBookings.length > 0 ? (
-                <table className="min-w-full divide-y divide-slate-200">
-                  <thead className="bg-sky-100">
+                <table className="min-w-full divide-y divide-gray-100">
+                  <thead className="bg-gray-50">
                     <tr>
                       <SortableHeader sortKey="guestName">Guest Name</SortableHeader>
-                      <SortableHeader sortKey="roomNumber">Room Number</SortableHeader>
-                      <SortableHeader sortKey="checkInDate">Check-in Date</SortableHeader>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Check-out Date
-                      </th>
-                      <SortableHeader sortKey="totalPrice">Total Price</SortableHeader>
-                      <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <SortableHeader sortKey="roomNumber">Room</SortableHeader>
+                      <SortableHeader sortKey="checkInDate">Check-in</SortableHeader>
+                       <SortableHeader sortKey="checkOutDate">Check-out</SortableHeader>
+                      <SortableHeader sortKey="totalPrice">Price</SortableHeader>
+                      <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-transparent divide-y divide-slate-200">
+                  <tbody className="bg-white divide-y divide-gray-100">
                     {filteredAndSortedBookings.map((booking) => (
                       <tr 
                         key={booking.id} 
                         onClick={() => openDetailsModal(booking)}
-                        className="hover:bg-sky-100/50 transition-colors cursor-pointer"
+                        className="hover:bg-gray-50 transition-colors cursor-pointer"
                       >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{booking.guestName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{booking.roomNumber}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{formatDate(booking.checkInDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{formatDate(booking.checkOutDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 font-medium">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{booking.guestName}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{booking.roomNumber}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{formatDate(booking.checkInDate)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{formatDate(booking.checkOutDate)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">
                           <button 
                             onClick={(e) => openConfirmationModal(e, booking)}
-                            className="p-2 rounded-full text-slate-500 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-red-500 transition-colors"
+                            className="p-2 rounded-full text-gray-500 hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                             aria-label={`Delete booking for ${booking.guestName}`}
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -218,9 +242,10 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
                   </tbody>
                 </table>
             ) : (
-                 <p className="text-slate-500 text-center py-8">
-                    {bookings.length === 0 ? "No rooms are booked yet." : "No bookings match the current filters."}
-                </p>
+                 <div className="text-gray-500 text-center py-16 border-2 border-dashed border-gray-200 rounded-lg">
+                    <h3 className="text-lg font-medium">{bookings.length === 0 ? "No rooms are booked yet." : "No bookings match filters."}</h3>
+                    <p className="text-sm mt-1">{bookings.length === 0 ? "Create a new booking to get started." : "Try adjusting your search or filters."}</p>
+                </div>
             )}
         </div>
       </div>

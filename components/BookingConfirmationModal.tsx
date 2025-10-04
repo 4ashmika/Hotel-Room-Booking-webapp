@@ -23,30 +23,30 @@ export const BookingConfirmationModal = ({ isOpen, onClose, booking }) => {
       role="dialog"
       aria-modal="true"
     >
-      <div className="bg-sky-50 rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md m-4 transform transition-all">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-md m-4 transform transition-all">
         <div className="p-8 text-center">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-500/20 mb-4">
-            <CheckIcon className="h-8 w-8 text-green-400" />
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <CheckIcon className="h-8 w-8 text-green-600" />
           </div>
-          <h3 className="text-xl leading-6 font-bold text-slate-900" id="modal-title">
+          <h3 className="text-xl leading-6 font-bold text-gray-900" id="modal-title">
             Booking Confirmed!
           </h3>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-gray-500">
             Thank you, {booking.guestName}. Your reservation is complete.
           </p>
 
-          <div className="mt-6 text-left p-4 bg-sky-100/50 rounded-lg border border-slate-200 space-y-3">
-            <p className="text-sm"><span className="font-semibold text-slate-600">Room:</span> <span className="text-slate-800">{room?.name} (Room {booking.roomNumber})</span></p>
-            <p className="text-sm"><span className="font-semibold text-slate-600">Check-in:</span> <span className="text-slate-800">{formatDate(booking.checkInDate)}</span></p>
-            <p className="text-sm"><span className="font-semibold text-slate-600">Check-out:</span> <span className="text-slate-800">{formatDate(booking.checkOutDate)}</span></p>
-            <div className="border-t border-slate-200 my-2"></div>
-            <p className="text-lg font-bold"><span className="text-slate-600">Total Price:</span> <span className="text-slate-800">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
+          <div className="mt-6 text-left p-4 bg-gray-100/60 rounded-lg border border-gray-200 space-y-3">
+            <p className="text-sm"><span className="font-semibold text-gray-600">Room:</span> <span className="text-gray-800">{room?.name} (Room {booking.roomNumber})</span></p>
+            <p className="text-sm"><span className="font-semibold text-gray-600">Check-in:</span> <span className="text-gray-800">{formatDate(booking.checkInDate)}</span></p>
+            <p className="text-sm"><span className="font-semibold text-gray-600">Check-out:</span> <span className="text-gray-800">{formatDate(booking.checkOutDate)}</span></p>
+            <div className="border-t border-gray-200 my-2"></div>
+            <p className="text-lg font-bold"><span className="text-gray-600">Total Price:</span> <span className="text-gray-800">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span></p>
           </div>
         </div>
-        <div className="bg-sky-100/50 px-6 py-4 rounded-b-2xl text-center">
+        <div className="bg-gray-50 px-6 py-4 rounded-b-2xl text-center">
           <button
             type="button"
-            className="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-8 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-sky-500 transition-colors"
+            className="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-8 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             onClick={onClose}
           >
             Done

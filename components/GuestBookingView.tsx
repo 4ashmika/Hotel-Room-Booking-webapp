@@ -83,7 +83,7 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
   const StaticDetail = ({ icon, value }) => (
     <div className="flex items-center gap-3 text-sm">
         {icon}
-        <span className="text-slate-600">{value}</span>
+        <span className="text-gray-600">{value}</span>
     </div>
   );
 
@@ -98,52 +98,53 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
             value={value}
             onChange={handleDetailChange}
             placeholder={placeholder}
-            className="w-full pl-10 pr-4 py-2 bg-sky-100 text-slate-900 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
         />
     </div>
   );
 
   return (
-    <div className="bg-sky-50/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl">
+    <div className="p-6 sm:p-8 lg:p-12">
+      <div className="max-w-4xl mx-auto">
         <div className="text-center">
-             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-500/20 mb-4">
-                <CheckIcon className="h-10 w-10 text-green-500" />
+             <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <CheckIcon className="h-10 w-10 text-green-600" />
             </div>
-            <h2 className="text-3xl font-bold text-slate-900">Your Booking is Confirmed!</h2>
-            <p className="text-slate-500 mt-2">Thank you, {booking.guestName}. Please review your reservation details below.</p>
+            <h2 className="text-3xl font-bold text-gray-900">Your Booking is Confirmed!</h2>
+            <p className="text-gray-500 mt-2">Thank you, {booking.guestName}. Please review your reservation details below.</p>
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
             <div className="space-y-6">
                 <div>
-                    <h3 className="font-bold text-lg text-slate-800 border-b border-slate-200 pb-2 mb-3">Reservation Details</h3>
+                    <h3 className="font-bold text-lg text-gray-800 border-b border-gray-200 pb-2 mb-3">Reservation Details</h3>
                     <div className="space-y-4">
                          <div className="flex items-center gap-3">
-                            <CalendarIcon className="h-5 w-5 text-sky-500 flex-shrink-0" />
+                            <CalendarIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
                             <div>
-                                <p className="text-xs text-slate-500">Check-in</p>
-                                <p className="font-bold text-slate-800">{formatDate(booking.checkInDate)}</p>
+                                <p className="text-xs text-gray-500">Check-in</p>
+                                <p className="font-bold text-gray-800">{formatDate(booking.checkInDate)}</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <CalendarIcon className="h-5 w-5 text-sky-500 flex-shrink-0" />
+                            <CalendarIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
                             <div>
-                                <p className="text-xs text-slate-500">Check-out</p>
-                                <p className="font-bold text-slate-800">{formatDate(booking.checkOutDate)}</p>
+                                <p className="text-xs text-gray-500">Check-out</p>
+                                <p className="font-bold text-gray-800">{formatDate(booking.checkOutDate)}</p>
                             </div>
                         </div>
-                        <div className="border-t border-slate-200 pt-4">
-                            <p className="text-sm text-slate-500">Total Price</p>
-                            <p className="text-3xl font-bold text-slate-900">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
+                        <div className="border-t border-gray-200 pt-4">
+                            <p className="text-sm text-gray-500">Total Price</p>
+                            <p className="text-3xl font-bold text-gray-900">{booking.totalPrice.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</p>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <div className="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
-                        <h3 className="font-bold text-lg text-slate-800">Guest Information</h3>
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-3">
+                        <h3 className="font-bold text-lg text-gray-800">Guest Information</h3>
                         {!isEditing && (
-                            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 text-sm font-semibold text-sky-600 hover:text-sky-800 transition-colors py-1 px-3 rounded-lg hover:bg-sky-100">
+                            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1 px-3 rounded-lg hover:bg-blue-100">
                                 <PencilIcon className="h-4 w-4" />
                                 Edit Details
                             </button>
@@ -152,27 +153,27 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
                     <div className="space-y-4">
                         {isEditing ? (
                             <>
-                                <EditableDetail icon={<UserIcon className="h-5 w-5 text-slate-400" />} name="guestName" value={editableDetails.guestName} placeholder="Full Name" />
-                                <EditableDetail icon={<PhoneIcon className="h-5 w-5 text-slate-400" />} name="customerPhoneNumber" value={editableDetails.customerPhoneNumber} placeholder="Phone Number" />
-                                <EditableDetail icon={<MailIcon className="h-5 w-5 text-slate-400" />} name="customerEmail" value={editableDetails.customerEmail} placeholder="Email Address" />
-                                <EditableDetail icon={<IdIcon className="h-5 w-5 text-slate-400" />} name="customerId" value={editableDetails.customerId} placeholder="National ID" />
+                                <EditableDetail icon={<UserIcon className="h-5 w-5 text-gray-400" />} name="guestName" value={editableDetails.guestName} placeholder="Full Name" />
+                                <EditableDetail icon={<PhoneIcon className="h-5 w-5 text-gray-400" />} name="customerPhoneNumber" value={editableDetails.customerPhoneNumber} placeholder="Phone Number" />
+                                <EditableDetail icon={<MailIcon className="h-5 w-5 text-gray-400" />} name="customerEmail" value={editableDetails.customerEmail} placeholder="Email Address" />
+                                <EditableDetail icon={<IdIcon className="h-5 w-5 text-gray-400" />} name="customerId" value={editableDetails.customerId} placeholder="National ID" />
                             </>
                         ) : (
                             <>
-                                <StaticDetail icon={<UserIcon className="h-5 w-5 text-slate-500" />} value={booking.guestName} />
-                                <StaticDetail icon={<PhoneIcon className="h-5 w-5 text-slate-500" />} value={booking.customerPhoneNumber} />
-                                <StaticDetail icon={<MailIcon className="h-5 w-5 text-slate-500" />} value={booking.customerEmail} />
-                                <StaticDetail icon={<IdIcon className="h-5 w-5 text-slate-500" />} value={`ID: ${booking.customerId}`} />
+                                <StaticDetail icon={<UserIcon className="h-5 w-5 text-gray-500" />} value={booking.guestName} />
+                                <StaticDetail icon={<PhoneIcon className="h-5 w-5 text-gray-500" />} value={booking.customerPhoneNumber} />
+                                <StaticDetail icon={<MailIcon className="h-5 w-5 text-gray-500" />} value={booking.customerEmail} />
+                                <StaticDetail icon={<IdIcon className="h-5 w-5 text-gray-500" />} value={`ID: ${booking.customerId}`} />
                             </>
                         )}
                         {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
                     </div>
                      {isEditing && (
                         <div className="flex items-center gap-4 mt-6">
-                            <button onClick={handleSaveChanges} disabled={isLoading} className="w-full inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors disabled:bg-slate-400">
+                            <button onClick={handleSaveChanges} disabled={isLoading} className="w-full inline-flex items-center justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:bg-gray-400">
                                 {isLoading ? <SpinnerIcon className="h-5 w-5" /> : 'Save Changes'}
                             </button>
-                            <button onClick={handleCancel} className="w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors">
+                            <button onClick={handleCancel} className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
                                 Cancel
                             </button>
                         </div>
@@ -180,23 +181,24 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
                 </div>
             </div>
             <div>
-                 <h3 className="font-bold text-lg text-slate-800 border-b border-slate-200 pb-2 mb-3">Room Details</h3>
+                 <h3 className="font-bold text-lg text-gray-800 border-b border-gray-200 pb-2 mb-3">Room Details</h3>
                  <img src={room.images[0]} alt={room.name} className="w-full h-48 object-cover rounded-lg mb-4"/>
-                 <h4 className="font-bold text-xl text-slate-900">{room.name}</h4>
-                 <p className="text-sm text-slate-500">Room {room.id}</p>
-                 <p className="text-sm text-slate-600 mt-2">{room.description}</p>
+                 <h4 className="font-bold text-xl text-gray-900">{room.name}</h4>
+                 <p className="text-sm text-gray-500">Room {room.id}</p>
+                 <p className="text-sm text-gray-600 mt-2">{room.description}</p>
             </div>
         </div>
         {!isEditing && (
-            <div className="mt-8 pt-6 border-t border-slate-200 text-center">
+            <div className="mt-8 pt-6 border-t border-gray-200 text-center">
                 <button 
                     onClick={onNewBooking}
-                    className="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-8 py-3 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors"
+                    className="w-full sm:w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-8 py-3 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                 >
                     Make Another Booking
                 </button>
             </div>
         )}
+      </div>
     </div>
   );
 };

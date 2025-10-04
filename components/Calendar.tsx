@@ -95,14 +95,14 @@ export const Calendar = ({ unavailableDates, onRangeSelect, initialStartDate, in
 
       const baseClasses = "relative w-full h-0 pt-[100%] rounded-full flex items-center justify-center text-sm transition-colors duration-150";
       const stateClasses = isPast
-        ? "text-slate-400 cursor-not-allowed"
+        ? "text-gray-400 cursor-not-allowed"
         : isUnavailable
-        ? "text-slate-400 line-through cursor-not-allowed"
-        : "text-slate-700 hover:bg-slate-200 cursor-pointer";
+        ? "text-gray-400 line-through cursor-not-allowed"
+        : "text-gray-700 hover:bg-gray-100 cursor-pointer";
       
       let bgClasses = "";
-      if (isStart || isEnd) bgClasses = "bg-sky-500 text-white";
-      else if (inRange) bgClasses = "bg-sky-500/20 text-sky-800";
+      if (isStart || isEnd) bgClasses = "bg-blue-500 text-white";
+      else if (inRange) bgClasses = "bg-blue-100 text-blue-800";
 
       days.push(
         <div key={i}
@@ -131,17 +131,17 @@ export const Calendar = ({ unavailableDates, onRangeSelect, initialStartDate, in
   return (
     <div className="w-full" onMouseLeave={() => setHoverDate(null)}>
       <div className="flex items-center justify-between mb-4">
-        <button type="button" onClick={() => changeMonth(-1)} className="p-2 rounded-full hover:bg-slate-200" aria-label="Previous month">
-          <ChevronLeftIcon className="h-5 w-5 text-slate-500" />
+        <button type="button" onClick={() => changeMonth(-1)} className="p-2 rounded-full hover:bg-gray-200" aria-label="Previous month">
+          <ChevronLeftIcon className="h-5 w-5 text-gray-500" />
         </button>
-        <h3 className="font-bold text-slate-800 text-center">
+        <h3 className="font-bold text-gray-800 text-center">
           {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </h3>
-        <button type="button" onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-slate-200" aria-label="Next month">
-          <ChevronRightIcon className="h-5 w-5 text-slate-500" />
+        <button type="button" onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-gray-200" aria-label="Next month">
+          <ChevronRightIcon className="h-5 w-5 text-gray-500" />
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-500 mb-2">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500 mb-2">
         <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
       </div>
       <div className="grid grid-cols-7 gap-y-1 items-center">
