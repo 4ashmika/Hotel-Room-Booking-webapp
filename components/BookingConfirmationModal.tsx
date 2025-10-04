@@ -1,16 +1,23 @@
 
 import React from 'react';
 import { CheckIcon } from './icons/CheckIcon';
-import { rooms } from '../data/rooms';
+import { Booking, Room } from '../types';
 
-export const BookingConfirmationModal = ({ isOpen, onClose, booking }) => {
+interface BookingConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  booking: Omit<Booking, 'id'> | null;
+  rooms: Room[];
+}
+
+export const BookingConfirmationModal: React.FC<BookingConfirmationModalProps> = ({ isOpen, onClose, booking, rooms }) => {
   if (!isOpen || !booking) {
     return null;
   }
 
   const room = rooms.find(r => r.id === booking.roomNumber);
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const offset = date.getTimezoneOffset();
     const adjustedDate = new Date(date.getTime() + offset * 60000);

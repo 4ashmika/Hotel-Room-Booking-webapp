@@ -33,9 +33,15 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, isActive, onClick }) => 
     </li>
 );
 
+type SidebarProps = {
+    activeView: string;
+    setActiveView: (view: any) => void;
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+};
 
 // FIX: Removed unused onSwitchRole prop to resolve error in App.tsx.
-export const Sidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, isOpen, setIsOpen }) => {
   // FIX: Added className prop to satisfy icon component prop requirements.
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon className="" /> },
@@ -44,7 +50,7 @@ export const Sidebar = ({ activeView, setActiveView, isOpen, setIsOpen }) => {
     { id: 'rooms', label: 'Rooms', icon: <DoorIcon className="" /> },
   ];
   
-  const handleNavClick = (view) => {
+  const handleNavClick = (view: string) => {
       setActiveView(view);
       if (window.innerWidth < 768) { // md breakpoint
           setIsOpen(false);

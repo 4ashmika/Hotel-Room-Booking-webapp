@@ -31,10 +31,18 @@ export const RoomDetails = ({ room }) => {
         <img src={room.images[currentImageIndex]} alt={room.name} className="w-full h-48 object-cover rounded-lg" />
         {room.images.length > 1 && (
           <>
-            <button onClick={prevImage} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full hover:bg-black/80 transition-colors" aria-label="Previous image">
+            <button
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full hover:bg-black/80 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+                aria-label="Previous image"
+            >
               <ChevronLeftIcon className="h-6 w-6" />
             </button>
-            <button onClick={nextImage} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full hover:bg-black/80 transition-colors" aria-label="Next image">
+            <button
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-1 rounded-full hover:bg-black/80 transition-colors focus:outline-none focus:ring-2 focus:ring-white"
+                aria-label="Next image"
+            >
               <ChevronRightIcon className="h-6 w-6" />
             </button>
           </>

@@ -7,12 +7,12 @@ import { IdIcon } from './icons/IdIcon';
 import { RoomSelector } from './RoomSelector';
 import { RoomDetails } from './RoomDetails';
 import { Calendar } from './Calendar';
-import { rooms } from '../data/rooms';
 import { ErrorBanner } from './ErrorBanner';
 import { BookingConfirmationModal } from './BookingConfirmationModal';
 import { SpinnerIcon } from './icons/SpinnerIcon';
+import { Room, Booking } from '../types';
 
-const formatDate = (date) => {
+const formatDate = (date: Date | null): string => {
   if (!date) return '';
   // Add time zone offset to prevent date from shifting
   const offset = date.getTimezoneOffset();
@@ -20,36 +20,39 @@ const formatDate = (date) => {
   return adjustedDate.toISOString().split('T')[0];
 };
 
-export const BookingForm = ({ onAddBooking, allBookings }) => {
+interface BookingFormProps {
+  onAddBooking: (bookingData: Omit<Booking, 'id'>) => Promise<{ error: string | null, bookingId: string | null }>;
+  allBookings: Booking[];
+  rooms: Room[];
+}
+
+export const BookingForm: React.FC<BookingFormProps> = ({ onAddBooking, allBookings, rooms }) => {
   const [guestName, setGuestName] = useState('');
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerId, setCustomerId] = useState('');
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [checkInDate, setCheckInDate] = useState(null);
-  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [checkInDate, setCheckInDate] = useState<Date | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [error, setError] = useState('');
-  // FIX: Explicitly type fieldErrors state to allow dynamic property access for validation styling.
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: boolean }>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [confirmedBooking, setConfirmedBooking] = useState(null);
+  const [confirmedBooking, setConfirmedBooking] = useState<Omit<Booking, 'id'> | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
   const unavailableDates = useMemo(() => {
     if (!selectedRoom) return [];
 
-    const dates = new Set();
+    const dates = new Set<string>();
     allBookings
       .filter(booking => booking.roomNumber === selectedRoom.id)
       .forEach(booking => {
-        // Robustly parse date strings to avoid timezone issues.
         const [startYear, startMonth, startDay] = booking.checkInDate.split('-').map(Number);
         const [endYear, endMonth, endDay] = booking.checkOutDate.split('-').map(Number);
         let currentDate = new Date(startYear, startMonth - 1, startDay);
         const endDate = new Date(endYear, endMonth - 1, endDay);
 
         while (currentDate < endDate) {
-          // formatDate expects a Date object, which currentDate is.
           dates.add(formatDate(currentDate));
           currentDate.setDate(currentDate.getDate() + 1);
         }
@@ -71,7 +74,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
     return { numberOfNights: 0, totalPrice: 0 };
   }, [selectedRoom, checkInDate, checkOutDate]);
 
-  const handleDateRangeSelect = (range) => {
+  const handleDateRangeSelect = (range: { start: Date | null, end: Date | null }) => {
     setCheckInDate(range.start);
     setCheckOutDate(range.end);
   };
@@ -89,7 +92,6 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
   }
 
   const validateForm = () => {
-    // FIX: Explicitly type `newFieldErrors` to allow dynamic property assignment and prevent TS errors.
     const newFieldErrors: { [key: string]: boolean } = {};
     if (!guestName.trim()) newFieldErrors.guestName = true;
     if (!customerPhoneNumber.trim()) newFieldErrors.customerPhoneNumber = true;
@@ -117,12 +119,12 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
     return true;
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setFieldErrors({});
     
-    if (!validateForm()) return;
+    if (!validateForm() || !selectedRoom || !checkInDate || !checkOutDate) return;
 
     setIsLoading(true);
     try {
@@ -144,9 +146,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
       } else {
         setConfirmedBooking(newBookingData);
         setIsConfirmationModalOpen(true);
-        // Do not reset form here for guest view, parent component will handle view switch
-        // For admin view, this component stays mounted, so we can reset.
-        if (window.location.pathname !== '/guest') { // A simple way to check context
+        if (window.location.pathname !== '/guest') {
             resetForm();
         }
       }
@@ -292,6 +292,7 @@ export const BookingForm = ({ onAddBooking, allBookings }) => {
         isOpen={isConfirmationModalOpen}
         onClose={handleCloseConfirmation}
         booking={confirmedBooking}
+        rooms={rooms}
       />
     </>
   );

@@ -93,7 +93,7 @@ export const Calendar = ({ unavailableDates, onRangeSelect, initialStartDate, in
       if (startDate && formatDate(dayDate) === formatDate(startDate)) isStart = true;
       if (endDate && formatDate(dayDate) === formatDate(endDate)) isEnd = true;
 
-      const baseClasses = "relative w-full h-0 pt-[100%] rounded-full flex items-center justify-center text-sm transition-colors duration-150";
+      const baseClasses = "relative w-full h-0 pt-[100%] rounded-full flex items-center justify-center text-sm transition-colors duration-150 focus:outline-none focus:z-10 focus:ring-2 focus:ring-blue-400";
       const stateClasses = isPast
         ? "text-gray-400 cursor-not-allowed"
         : isUnavailable
@@ -131,13 +131,23 @@ export const Calendar = ({ unavailableDates, onRangeSelect, initialStartDate, in
   return (
     <div className="w-full" onMouseLeave={() => setHoverDate(null)}>
       <div className="flex items-center justify-between mb-4">
-        <button type="button" onClick={() => changeMonth(-1)} className="p-2 rounded-full hover:bg-gray-200" aria-label="Previous month">
+        <button
+            type="button"
+            onClick={() => changeMonth(-1)}
+            className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            aria-label="Previous month"
+        >
           <ChevronLeftIcon className="h-5 w-5 text-gray-500" />
         </button>
         <h3 className="font-bold text-gray-800 text-center">
           {currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </h3>
-        <button type="button" onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-gray-200" aria-label="Next month">
+        <button
+            type="button"
+            onClick={() => changeMonth(1)}
+            className="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            aria-label="Next month"
+        >
           <ChevronRightIcon className="h-5 w-5 text-gray-500" />
         </button>
       </div>

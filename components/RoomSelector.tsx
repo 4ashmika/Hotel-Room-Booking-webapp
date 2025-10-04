@@ -13,7 +13,7 @@ export const RoomSelector = ({ rooms, selectedRoomId, onSelectRoom }) => {
             onClick={() => onSelectRoom(room.id)}
             className={`
               relative rounded-lg overflow-hidden group
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500
               transition-all duration-300 transform hover:-translate-y-1
               ${isSelected 
                 ? 'ring-2 ring-blue-500 shadow-lg' 

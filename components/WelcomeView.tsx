@@ -2,17 +2,16 @@
 import React, { useState } from 'react';
 import { CalendarPlusIcon } from './icons/CalendarPlusIcon';
 import { SearchIcon } from './icons/SearchIcon';
-import { rooms } from '../data/rooms';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
+import { Room } from '../types';
 
 type WelcomeViewProps = {
   onNewBookingClick: () => void;
   onFindBookingClick: () => void;
+  rooms: Room[];
 };
-
-const featuredRooms = rooms.filter(room => ['305', '412'].includes(room.id));
 
 const signatureAmenities = [
     {
@@ -37,7 +36,7 @@ const signatureAmenities = [
     }
 ];
 
-const FeaturedRoomCard = ({ room }: { room: typeof featuredRooms[0] }) => {
+const FeaturedRoomCard = ({ room }: { room: Room }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = (e: React.MouseEvent) => {
@@ -61,14 +60,14 @@ const FeaturedRoomCard = ({ room }: { room: typeof featuredRooms[0] }) => {
           <>
             <button 
               onClick={prevImage} 
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 focus:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white z-10"
               aria-label="Previous image"
             >
               <ChevronLeftIcon className="h-6 w-6" />
             </button>
             <button 
               onClick={nextImage} 
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 focus:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full hover:bg-black/70 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white z-10"
               aria-label="Next image"
             >
               <ChevronRightIcon className="h-6 w-6" />
@@ -99,7 +98,9 @@ const FeaturedRoomCard = ({ room }: { room: typeof featuredRooms[0] }) => {
   );
 };
 
-export const WelcomeView: React.FC<WelcomeViewProps> = ({ onNewBookingClick, onFindBookingClick }) => {
+export const WelcomeView: React.FC<WelcomeViewProps> = ({ onNewBookingClick, onFindBookingClick, rooms }) => {
+  const featuredRooms = rooms.filter(room => ['305', '412'].includes(room.id));
+  
   return (
     <div className="space-y-12 p-4 sm:p-6 lg:p-8">
       {/* Hero Section */}

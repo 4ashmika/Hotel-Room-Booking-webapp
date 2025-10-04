@@ -3,6 +3,7 @@ import { UserIcon } from './icons/UserIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { CashIcon } from './icons/CashIcon';
 import { BedIcon } from './icons/BedIcon';
+import { Booking, Room } from '../types';
 
 
 // FIX: Added explicit prop types to StatCard for better type safety.
@@ -21,7 +22,7 @@ const StatCard = ({ title, value, icon }: { title: string; value: string | numbe
 );
 
 // FIX: Extracted ActivityItem props to a dedicated type to resolve TS errors related to the `key` prop.
-type ActivityItemProps = { booking: any; type: 'check-in' | 'check-out'; };
+type ActivityItemProps = { booking: Booking; type: 'check-in' | 'check-out'; };
 // FIX: Explicitly typing the ActivityItem as a React.FC to correctly handle the `key` prop and resolve TypeScript errors.
 const ActivityItem: React.FC<ActivityItemProps> = ({ booking, type }) => (
     <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
@@ -40,7 +41,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ booking, type }) => (
     </div>
 );
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
     // Simple check if it's today
@@ -51,7 +52,7 @@ const formatDate = (dateString) => {
 };
 
 
-export const Dashboard = ({ bookings, rooms }) => {
+export const Dashboard = ({ bookings, rooms }: { bookings: Booking[], rooms: Room[] }) => {
 
     const {
         totalRevenue,

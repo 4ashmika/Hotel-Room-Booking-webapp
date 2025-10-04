@@ -3,41 +3,41 @@ import React, { useState, useMemo } from 'react';
 import { TrashIcon } from './icons/TrashIcon';
 import { ConfirmationModal } from './ConfirmationModal';
 import { BookingDetailsModal } from './BookingDetailsModal';
-import { rooms } from '../data/rooms';
 import { SortIcon } from './icons/SortIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { SearchIcon } from './icons/SearchIcon';
+import { Booking, Room } from '../types';
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string): string => {
   if (!dateString) return '';
-  // The date string is in YYYY-MM-DD format. To avoid timezone issues where `new Date('YYYY-MM-DD')`
-  // is treated as UTC midnight (and can be the previous day in some timezones), we append the time
-  // and specify it's a UTC date.
   const date = new Date(`${dateString}T00:00:00Z`);
-  // Then we format it back to YYYY-MM-DD, again specifying UTC to prevent local timezone from shifting it.
   return date.toLocaleDateString('en-CA', { timeZone: 'UTC' });
 };
 
-export const BookingList = ({ bookings, onDeleteBooking }) => {
+interface BookingListProps {
+  bookings: Booking[];
+  rooms: Room[];
+  onDeleteBooking: (bookingId: string) => Promise<any>;
+}
+
+export const BookingList: React.FC<BookingListProps> = ({ bookings, rooms, onDeleteBooking }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [bookingToDelete, setBookingToDelete] = useState(null);
+  const [bookingToDelete, setBookingToDelete] = useState<Booking | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   
-  const [sortConfig, setSortConfig] = useState({ key: 'checkInDate', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState<{ key: keyof Booking, direction: 'asc' | 'desc' }>({ key: 'checkInDate', direction: 'asc' });
   
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRoom, setFilterRoom] = useState('');
   const [filterMonth, setFilterMonth] = useState('');
 
   const availableMonths = useMemo(() => {
-    // FIX: Explicitly type the Set to avoid its elements being inferred as 'unknown'.
     const monthSet = new Set<string>();
     bookings.forEach(booking => {
         const checkIn = new Date(booking.checkInDate);
-        // Adjust for timezone when creating the date object to avoid month shifts
         const utcDate = new Date(checkIn.getUTCFullYear(), checkIn.getUTCMonth(), checkIn.getUTCDate());
         const month = utcDate.getMonth();
         const year = utcDate.getFullYear();
@@ -52,7 +52,6 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
         };
     });
 
-    // Sort months chronologically
     monthArray.sort((a, b) => {
         const [yearA, monthA] = a.value.split('-').map(Number);
         const [yearB, monthB] = b.value.split('-').map(Number);
@@ -96,16 +95,16 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
     return filteredItems;
   }, [bookings, sortConfig, filterRoom, filterMonth, searchQuery]);
 
-  const requestSort = (key) => {
-    let direction = 'asc';
+  const requestSort = (key: keyof Booking) => {
+    let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
         direction = 'desc';
     }
     setSortConfig({ key, direction });
   };
 
-  const openConfirmationModal = (e, booking) => {
-    e.stopPropagation(); // Prevent row click from triggering
+  const openConfirmationModal = (e: React.MouseEvent, booking: Booking) => {
+    e.stopPropagation();
     setBookingToDelete(booking);
     setIsDeleteModalOpen(true);
   };
@@ -124,7 +123,7 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
     }
   };
 
-  const openDetailsModal = (booking) => {
+  const openDetailsModal = (booking: Booking) => {
     setSelectedBooking(booking);
     setIsDetailsModalOpen(true);
   };
@@ -136,12 +135,13 @@ export const BookingList = ({ bookings, onDeleteBooking }) => {
   
   const selectedRoom = selectedBooking ? rooms.find(r => r.id === selectedBooking.roomNumber) || null : null;
 
-  // FIX: Defined a props type for SortableHeader to resolve an incorrect "children is missing" error.
-  type SortableHeaderProps = { sortKey: string; children: React.ReactNode; };
-  // FIX: Explicitly typing the SortableHeader as a React.FC to correctly handle children props and resolve TypeScript errors.
+  type SortableHeaderProps = { sortKey: keyof Booking; children: React.ReactNode; };
   const SortableHeader: React.FC<SortableHeaderProps> = ({ sortKey, children }) => (
     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-        <button onClick={() => requestSort(sortKey)} className="flex items-center gap-2 hover:text-gray-900 transition-colors">
+        <button
+            onClick={() => requestSort(sortKey)}
+            className="flex items-center gap-2 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 rounded px-2 py-1 -ml-2"
+        >
             {children}
             <SortIcon className="h-4 w-4" direction={sortConfig.key === sortKey ? sortConfig.direction : undefined} />
         </button>

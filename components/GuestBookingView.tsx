@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { UserIcon } from './icons/UserIcon';
 import { PhoneIcon } from './icons/PhoneIcon';
@@ -145,7 +146,10 @@ export const GuestBookingView = ({ booking, room, onNewBooking, onUpdateBooking 
                 <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-4">
                     <h3 className="font-bold text-lg text-gray-800">Guest Information</h3>
                     {!isEditing && (
-                        <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1 px-3 rounded-lg hover:bg-blue-100">
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors py-1 px-3 rounded-lg hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
                             <PencilIcon className="h-4 w-4" />
                             Edit Details
                         </button>

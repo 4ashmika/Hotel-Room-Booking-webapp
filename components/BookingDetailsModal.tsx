@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { XIcon } from './icons/XIcon';
 import { UserIcon } from './icons/UserIcon';
@@ -39,7 +40,11 @@ export const BookingDetailsModal = ({ isOpen, onClose, booking, room }) => {
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">For {room.name} - Room {room.id}</p>
             </div>
-            <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-200" aria-label="Close modal">
+            <button
+                onClick={onClose}
+                className="p-1 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                aria-label="Close modal"
+            >
               <XIcon className="h-6 w-6 text-gray-500" />
             </button>
           </div>
